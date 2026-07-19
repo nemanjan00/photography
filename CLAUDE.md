@@ -1,6 +1,23 @@
-# CLAUDE.md — Frames
+# CLAUDE.md
 
-Guidance for AI agents working in this repo. Read before changing the pipeline.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+Frames — a static, generated timeline photo gallery. Read before changing the pipeline.
+
+## Commands
+
+```sh
+npm install
+npm run ingest <image|dir> [more…]  # file photos by EXIF date → photos/YYYY/MM/DD/ (develops RAW)
+npm run build                       # photos/ → dist/ (uses ImageMagick if present, else sharp)
+FRAMES_ENGINE=sharp npm run build   # force the Render (sharp) path — verify this when touching the engine
+npm run serve                       # static-serve dist/ at http://127.0.0.1:8787
+npm run dev                         # build + serve
+node scripts/dev/shoot.mjs          # screenshot the served site → /tmp/shots (needs: npm i --no-save playwright-core)
+```
+
+There is **no test suite, linter, or typecheck** in this repo — verify changes
+by building through **both** engines and eyeballing the served output / a screenshot.
 
 ## What this is
 
@@ -81,17 +98,6 @@ palette gradients; blur-up reveal; scroll-driven color bleed (IntersectionObserv
 portrait-phone landscape "sweep" (CSS, gated by `.motion-ok` + `.in-view`);
 keyed lightbox with prev/next + full-res download. All motion respects
 `prefers-reduced-motion` and `navigator.connection.saveData`.
-
-## Testing a change
-
-```sh
-npm run build                      # ImageMagick here
-FRAMES_ENGINE=sharp npm run build  # verify the Render (sharp) path too
-npm run serve                      # http://127.0.0.1:8787
-node scripts/dev/shoot.mjs         # screenshots to /tmp/shots (needs: npm i --no-save playwright-core)
-```
-
-Always verify BOTH engines when touching `engine.mjs`/`image.mjs`/`palette.mjs`.
 
 ## Deploy
 
