@@ -64,7 +64,10 @@ const WB = { 0: "auto", 1: "manual" };
 
 function curiosities(d, picked) {
   const rows = [];
-  const push = (label, value) => value != null && value !== "" && rows.push({ label, value: String(value) });
+  const push = (label, value) => {
+    const v = value == null ? "" : String(value);
+    if (v && !/^(unknown|not defined|undefined|n\/a|reserved)$/i.test(v)) rows.push({ label, value: v });
+  };
 
   // 35mm-equivalent field of view
   if (picked.focalLength35 && picked.focalLength35 !== picked.focalLength)

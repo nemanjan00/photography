@@ -16,6 +16,7 @@ import path from "node:path";
 import exifr from "exifr";
 import config from "../site.config.mjs";
 import { makeMaster, isRaw } from "./lib/image.mjs";
+import { embedExifFromOriginal } from "./lib/embed-exif.mjs";
 import { pad } from "./lib/util.mjs";
 
 const IMAGE_RE = /\.(jpe?g|png|tiff?|heic|heif|webp|nef|cr2|cr3|arw|dng|raf|rw2|orf)$/i;
@@ -83,6 +84,11 @@ async function main() {
       const target = await uniqueTarget(dir, `${stem}.jpg`);
 
       const { developer } = await makeMaster(file, target, config.ingest);
+
+      // Embed the allowlisted EXIF from the ORIGINAL into the master JPG, so the
+      // committed JPG is self-contained. A master carved from a RAW's embedded
+      // preview carries no EXIF otherwise. Privacy-safe: allowlist only, no GPS.
+      await embedExifFromOriginal(file, target, config.exifAllow).catch(() => {});
 
       if (config.ingest.move && !isRaw(file)) {
         // never delete a RAW original — it's the negative. only move non-RAW.

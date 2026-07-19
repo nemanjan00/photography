@@ -109,7 +109,7 @@ async function processPhoto(file) {
     `Photograph — ${new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`;
 
   return {
-    id, url: `/photo/${id}/`, date, dayKey,
+    id, url: `/photo/${id}/`, date, dayKey, monthKey: dayKey.slice(0, 7),
     width: dim.width, height: dim.height,
     palette, lqip, exif, story, alt,
     sizes,
@@ -179,18 +179,18 @@ async function main() {
   const all = (await mapLimit(files, cpuCount, processPhoto))
     .sort((a, b) => new Date(b.date) - new Date(a.date)); // newest first
 
-  // group into day sections (newest day first)
-  const dayMap = new Map();
-  for (const p of all) (dayMap.get(p.dayKey) || dayMap.set(p.dayKey, []).get(p.dayKey)).push(p);
-  const days = [...dayMap.entries()]
+  // group into month sections (phone-gallery style, newest month first)
+  const monthMap = new Map();
+  for (const p of all) (monthMap.get(p.monthKey) || monthMap.set(p.monthKey, []).get(p.monthKey)).push(p);
+  const months = [...monthMap.entries()]
     .sort((a, b) => (a[0] < b[0] ? 1 : -1))
-    .map(([date, photos]) => ({ date, photos }));
+    .map(([month, photos]) => ({ month, photos }));
 
   const [appJs, css] = await Promise.all([bundleJs(), minifyCss()]);
   await copyFonts();
 
   const dataJson = dataIsland(all);
-  await fs.writeFile(path.join(OUT, "index.html"), renderIndex({ days, all, cfg: config, css, appJs, dataJson }));
+  await fs.writeFile(path.join(OUT, "index.html"), renderIndex({ months, all, cfg: config, css, appJs, dataJson }));
 
   for (let i = 0; i < all.length; i++) {
     const p = all[i];
@@ -204,7 +204,7 @@ async function main() {
   await fs.writeFile(path.join(OUT, "robots.txt"), robotsTxt(config));
   await fs.copyFile(path.join(ROOT, "LICENSE.txt"), path.join(OUT, "LICENSE.txt")).catch(() => {});
   // SPA-ish fallback for deep photo routes if the host wants one
-  await fs.writeFile(path.join(OUT, "404.html"), renderIndex({ days, all, cfg: config, css, appJs, dataJson }));
+  await fs.writeFile(path.join(OUT, "404.html"), renderIndex({ months, all, cfg: config, css, appJs, dataJson }));
 
   const kb = (await du(OUT)) / 1024;
   console.log(`✓ built ${all.length} photos → ${path.relative(ROOT, OUT)}/  (${(Date.now() - t0) / 1000}s, ${kb.toFixed(0)} KB)`);

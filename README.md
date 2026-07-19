@@ -1,4 +1,4 @@
-# Frames
+# Photography
 
 A timeline photo gallery that you feed with photos and nothing else.
 
@@ -102,10 +102,10 @@ The light only does this for about ten minutes in December…
 publish `dist/`, with long-cache headers on fingerprinted assets. Point Render
 at the repo and it builds on every push.
 
-The build has **no system dependencies**: it uses ImageMagick if present, and
-otherwise [`sharp`](https://sharp.pixelplumbing.com/) (which ships its own
-libvips binary via npm) — so Render's Node build works without ImageMagick.
-Force one with `FRAMES_ENGINE=sharp|imagemagick`.
+The build has **no system dependencies**: image processing uses
+[`sharp`](https://sharp.pixelplumbing.com/) (bundled libvips binary via npm) by
+default, so the local build matches Render exactly. Prefer ImageMagick locally?
+`PHOTO_ENGINE=imagemagick npm run build`.
 
 ## License
 

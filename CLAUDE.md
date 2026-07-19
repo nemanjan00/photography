@@ -2,22 +2,22 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Frames — a static, generated timeline photo gallery. Read before changing the pipeline.
+Photography — a static, generated timeline photo gallery. Read before changing the pipeline.
 
 ## Commands
 
 ```sh
 npm install
 npm run ingest <image|dir> [more…]  # file photos by EXIF date → photos/YYYY/MM/DD/ (develops RAW)
-npm run build                       # photos/ → dist/ (uses ImageMagick if present, else sharp)
-FRAMES_ENGINE=sharp npm run build   # force the Render (sharp) path — verify this when touching the engine
+npm run build                       # photos/ → dist/ (bundled sharp — same as Render)
+PHOTO_ENGINE=imagemagick npm run build  # opt into ImageMagick instead of sharp
 npm run serve                       # static-serve dist/ at http://127.0.0.1:8787
 npm run dev                         # build + serve
 node scripts/dev/shoot.mjs          # screenshot the served site → /tmp/shots (needs: npm i --no-save playwright-core)
 ```
 
 There is **no test suite, linter, or typecheck** in this repo — verify changes
-by building through **both** engines and eyeballing the served output / a screenshot.
+by building and eyeballing the served output / a screenshot.
 
 ## What this is
 
@@ -52,15 +52,16 @@ originals ──ingest──▶ photos/YYYY/MM/DD/*.jpg ──build──▶ dis
 
 ## The image engine (important)
 
-`scripts/lib/engine.mjs` auto-selects a back end and exposes 5 ops
-(`dimensions`, `lqipBuffer`, `derive`, `resizeMaster`, `rawColors`):
+`scripts/lib/engine.mjs` exposes 5 ops (`dimensions`, `lqipBuffer`, `derive`,
+`resizeMaster`, `rawColors`) over two interchangeable back ends:
 
-- **ImageMagick** (`magick`) when on PATH — local / media sandbox.
-- **sharp** (bundled libvips via npm) otherwise — **Render's build has no
-  ImageMagick**, so it runs on sharp. Both must produce equivalent output.
+- **sharp** (bundled libvips via npm) — **the default everywhere**, so the local
+  build is byte-for-byte what Render produces (Render has no ImageMagick).
+- **ImageMagick** (`magick`) — opt-in via `PHOTO_ENGINE=imagemagick`, kept for
+  anyone who prefers it locally.
 
-Force with `FRAMES_ENGINE=sharp|imagemagick`. **If you add an image operation,
-implement it in BOTH back ends** or the sharp (production) build breaks.
+**If you add an image operation, implement it in BOTH back ends** (default sharp
+must stay complete) — and keep their output equivalent.
 
 ## Conventions / invariants — do not violate
 

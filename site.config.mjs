@@ -6,7 +6,7 @@
 
 export default {
   site: {
-    title: "Frames",
+    title: "Photography",
     // Shown in the header and used as the default <title> suffix.
     tagline: "a timeline, oversaturated",
     author: "Nemanja Nedeljkovic",

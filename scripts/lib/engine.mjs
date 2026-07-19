@@ -8,17 +8,14 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
-import { magick, has } from "./util.mjs";
+import { magick } from "./util.mjs";
 
 let _engine = null;
 export async function engine() {
   if (_engine) return _engine;
-  // FRAMES_ENGINE=sharp|imagemagick forces a back end (else: magick if present,
-  // sharp otherwise — so CI/Render, which lack ImageMagick, use sharp).
-  const forced = process.env.FRAMES_ENGINE;
-  if (forced === "sharp") _engine = await sharpEngine();
-  else if (forced === "imagemagick") _engine = magickEngine;
-  else _engine = (await has("magick")) ? magickEngine : await sharpEngine();
+  // sharp (bundled libvips) is the default EVERYWHERE — local build == Render
+  // build, no divergence. Opt into ImageMagick with PHOTO_ENGINE=imagemagick.
+  _engine = process.env.PHOTO_ENGINE === "imagemagick" ? magickEngine : await sharpEngine();
   return _engine;
 }
 export async function engineName() {

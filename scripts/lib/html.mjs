@@ -94,7 +94,7 @@ function siteHeader(cfg, years) {
 const siteFooter = (cfg) =>
   `<footer class="site-footer">
     <span>© ${esc(cfg.site.author)} · <a href="/LICENSE.txt">MIT</a></span>
-    <span>${'${count}'} frames · shot on Nikon · built with <a href="https://qrp.nemanja.top/">qrp</a> · zero hand-written CSS</span>
+    <span>${'${count}'} photos · shot on Nikon · built with <a href="https://qrp.nemanja.top/">qrp</a> · zero hand-written CSS</span>
   </footer>`;
 
 // ── Pages ─────────────────────────────────────────────────────────────────
@@ -103,8 +103,12 @@ function fmtDay(iso) {
   const d = new Date(iso);
   return d.toLocaleDateString("en-US", { weekday: "short", year: "numeric", month: "long", day: "numeric" });
 }
+function fmtMonth(key) {
+  const [y, m] = key.split("-").map(Number);
+  return new Date(y, m - 1, 1).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
 
-export function renderIndex({ days, all, cfg, css, appJs, dataJson }) {
+export function renderIndex({ months, all, cfg, css, appJs, dataJson }) {
   const years = [...new Set(all.map((p) => new Date(p.date).getFullYear()))].sort((a, b) => b - a);
   const hero = all[0];
   const jsonLd = JSON.stringify({
@@ -118,20 +122,17 @@ export function renderIndex({ days, all, cfg, css, appJs, dataJson }) {
   });
 
   let lastYear = null;
-  const sections = days
-    .map(({ date, photos }) => {
-      const y = new Date(date).getFullYear();
+  const sections = months
+    .map(({ month, photos }) => {
+      const y = Number(month.slice(0, 4));
       const anchor = y !== lastYear ? ` id="y${y}"` : "";
       lastYear = y;
-      const swatches = photos[0].palette.dominant.slice(0, 5).map((c) => `<i style="background:${c}"></i>`).join("");
-      return `<section class="day"${anchor}>
+      return `<section class="month"${anchor}>
         <div class="day-marker" style="--accent:${photos[0].palette.accent}">
-          <time datetime="${date}">${fmtDay(date)}</time>
+          <time datetime="${month}">${fmtMonth(month)}</time>
           <span class="rule"></span>
-          <span class="swatches">${swatches}</span>
-          <span class="count">${photos.length} frame${photos.length > 1 ? "s" : ""}</span>
         </div>
-        <div class="grid">${photos.map((p, i) => frame(p, { eager: p === hero })).join("")}</div>
+        <div class="grid">${photos.map((p) => frame(p, { eager: p === hero })).join("")}</div>
       </section>`;
     })
     .join("");
@@ -151,7 +152,7 @@ export function renderIndex({ days, all, cfg, css, appJs, dataJson }) {
     css, jsonLd, preload: hero ? hero.sizes[Math.min(2, hero.sizes.length - 1)].webp : "", cfg,
   })}</head>
 <body>${body}
-<script type="application/json" id="frames-data">${dataJson}</script>
+<script type="application/json" id="photo-data">${dataJson}</script>
 <script type="module" src="${appJs}"></script>
 </body></html>`;
 }
