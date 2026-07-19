@@ -82,7 +82,8 @@ ${preload ? `<link rel="preload" as="image" href="${esc(preload)}" fetchpriority
 }
 
 const shell = (body) =>
-  `<div class="ambient-photo" aria-hidden="true"></div><div class="ambient" aria-hidden="true"></div>${body}`;
+  `<div class="ambient-photo" aria-hidden="true"></div><div class="ambient" aria-hidden="true"></div>` +
+  `<div class="topband" aria-hidden="true"></div>${body}`;
 
 function siteHeader(cfg, years) {
   return `<header class="site-header">
