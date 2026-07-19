@@ -48,8 +48,22 @@ function parseFrontmatter(md) {
   return { meta, body: md.slice(end + 4) };
 }
 
-/** Split a story body into a summary + a per-photo-stem → html map. */
-function parseStoryBody(body) {
+const YT_RE = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/;
+/** Pull YouTube URLs (on their own line) out of markdown; return ids + cleaned. */
+function extractVideos(md) {
+  const ids = [];
+  const cleaned = md.replace(/^[ \t]*(?:@?(?:youtube|video):?[ \t]*)?(https?:\/\/\S*(?:youtu\.be|youtube\.com)\/\S+)[ \t]*$/gim, (line, url) => {
+    const m = url.match(YT_RE);
+    if (!m) return line;
+    if (!ids.includes(m[1])) ids.push(m[1]);
+    return "";
+  });
+  return { ids, cleaned };
+}
+
+/** Split a story body into videos + a summary + a per-photo-stem → html map. */
+function parseStoryBody(rawBody) {
+  const { ids: videos, cleaned: body } = extractVideos(rawBody);
   const parts = body.split(/^##[ \t]+/m);
   const summary = parts.shift().trim();
   const perPhoto = {};
@@ -61,14 +75,14 @@ function parseStoryBody(body) {
     perPhoto[stem] = text ? marked.parse(text).trim() : null;
     order.push(stem);
   }
-  return { summaryHtml: summary ? marked.parse(summary).trim() : "", perPhoto, order };
+  return { summaryHtml: summary ? marked.parse(summary).trim() : "", perPhoto, order, videos };
 }
 
 // ── discover stories: leaf folders containing images ──────────────────────
 async function findStoryDirs() {
   const dirs = new Set();
   for (const e of await fs.readdir(PHOTOS, { withFileTypes: true, recursive: true }).catch(() => [])) {
-    if (e.isFile() && IMG_RE.test(e.name)) dirs.add(e.parentPath || e.path);
+    if (e.isFile() && (IMG_RE.test(e.name) || e.name === "story.md")) dirs.add(e.parentPath || e.path);
   }
   return [...dirs];
 }
@@ -131,11 +145,13 @@ async function loadStory(dir) {
   const photos = await mapLimit(files, cpuCount, (f) => processPhoto(f, { perPhoto: story.perPhoto, fallbackDate }));
   photos.sort((a, b) => new Date(a.date) - new Date(b.date)); // chronological within a trip
 
-  const date = photos[0]?.date || fallbackDate;
+  const metaDate = meta.date ? new Date(meta.date) : null;
+  const date = (metaDate && !isNaN(metaDate) ? metaDate.toISOString() : null) || photos[0]?.date || fallbackDate;
   return {
     slug, url: `/story/${slug}/`,
     title: meta.title || slug,
     summaryHtml: story.summaryHtml,
+    videos: story.videos,          // YouTube ids — rendered as grid items, like photos
     year: Number(year), month: `${year}-${month}`,
     date, photos,
   };
@@ -190,7 +206,7 @@ async function main() {
   console.log(`processing ${photoCount} photo(s) in ${dirs.length} stories on ${cpuCount} cores…`);
 
   let stories = await Promise.all(dirs.map(loadStory));
-  stories = stories.filter((s) => s.photos.length).sort((a, b) => new Date(b.date) - new Date(a.date)); // newest story first
+  stories = stories.filter((s) => s.photos.length || s.videos.length).sort((a, b) => new Date(b.date) - new Date(a.date)); // newest story first
   const allPhotos = stories.flatMap((s) => s.photos).sort((a, b) => new Date(b.date) - new Date(a.date));
 
   // group stories → months → years for the timeline
