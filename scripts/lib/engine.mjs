@@ -95,12 +95,14 @@ async function sharpEngine() {
         .webp({ quality }).toBuffer();
     },
 
-    async derive(file, outPath, { width, format, quality, saturate = 100, srcW }) {
+    async derive(file, outPath, { width, format, quality, saturate = 100, srcW, effort }) {
       if (srcW && width > srcW) return null;
       await fs.mkdir(path.dirname(outPath), { recursive: true });
       let pipe = sharp(file).rotate().resize({ width, withoutEnlargement: true });
       pipe = mod(saturate, pipe);
       const opts = { quality };
+      if (effort != null && (format === "avif" || format === "webp")) opts.effort = effort;
+      if (format === "jpeg") opts.mozjpeg = true;
       const info = await pipe.toFormat(format === "jpeg" ? "jpeg" : format, opts).toFile(outPath);
       return { width: info.width, height: info.height, bytes: info.size, format, path: outPath };
     },

@@ -80,12 +80,15 @@ async function processPhoto(file) {
 
   const sizes = [];
   for (const w of widths) {
+    const wantAvif = w <= B.avifMaxWidth; // AVIF only for small/mobile sizes (encode cost)
     const [avif, webp] = await Promise.all([
-      derive(file, path.join(imgDir, `${id}-${w}.avif`), { width: w, format: "avif", quality: B.quality.avif, saturate: B.saturate, srcW: dim.width }),
-      derive(file, path.join(imgDir, `${id}-${w}.webp`), { width: w, format: "webp", quality: B.quality.webp, saturate: B.saturate, srcW: dim.width }),
+      wantAvif
+        ? derive(file, path.join(imgDir, `${id}-${w}.avif`), { width: w, format: "avif", quality: B.quality.avif, effort: B.effort.avif, saturate: B.saturate, srcW: dim.width })
+        : null,
+      derive(file, path.join(imgDir, `${id}-${w}.webp`), { width: w, format: "webp", quality: B.quality.webp, effort: B.effort.webp, saturate: B.saturate, srcW: dim.width }),
     ]);
-    if (avif && webp)
-      sizes.push({ w, h: avif.height, avif: `/img/${id}-${w}.avif`, webp: `/img/${id}-${w}.webp` });
+    if (webp)
+      sizes.push({ w, h: webp.height, webp: `/img/${id}-${w}.webp`, ...(avif ? { avif: `/img/${id}-${w}.avif` } : {}) });
   }
 
   // a universal JPEG fallback (mid) + a full-res JPEG for the download button

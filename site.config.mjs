@@ -31,11 +31,14 @@ export default {
     // Responsive widths, in CSS px. Each is capped to the master's real
     // width — the pipeline NEVER upscales, so nothing looks soft.
     // Small ones keep phones on a tiny-data diet; big ones make 4K sing.
-    widths: [480, 800, 1200, 1600, 2400, 3200],
+    widths: [480, 900, 1400, 2000, 2800],
 
-    // Modern formats emitted per size, best-first. A JPEG fallback is
-    // always written so every browser gets something.
-    formats: ["avif", "webp"],
+    // AVIF compresses best (great for mobile LCP) but is SLOW to encode, so we
+    // only emit it up to this width; WebP covers every size (fast) and desktop/
+    // 4K get WebP. Raise avifMaxWidth for more AVIF at the cost of build time.
+    // `effort` 0–9: lower = much faster encode, marginally larger files.
+    avifMaxWidth: 1400,
+    effort: { avif: 3, webp: 4 },
     quality: { avif: 46, webp: 74, jpeg: 82 },
 
     // The 6×2-ish inline blur placeholder — a few dozen bytes, base64'd

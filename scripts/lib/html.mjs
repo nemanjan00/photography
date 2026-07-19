@@ -7,7 +7,7 @@ const SIZES_HERO = "min(96vw, 1800px)";
 // ── Fragments ─────────────────────────────────────────────────────────────
 
 function srcset(sizes, fmt) {
-  return sizes.map((s) => `${s[fmt]} ${s.w}w`).join(", ");
+  return sizes.filter((s) => s[fmt]).map((s) => `${s[fmt]} ${s.w}w`).join(", ");
 }
 
 export function pictureTag(p, { sizes = SIZES_GRID, eager = false } = {}) {
@@ -15,8 +15,9 @@ export function pictureTag(p, { sizes = SIZES_GRID, eager = false } = {}) {
   const attrs = eager
     ? 'loading="eager" fetchpriority="high" decoding="async"'
     : 'loading="lazy" decoding="async"';
+  const avif = srcset(p.sizes, "avif");
   return `<picture>
-      <source type="image/avif" srcset="${srcset(p.sizes, "avif")}" sizes="${sizes}">
+      ${avif ? `<source type="image/avif" srcset="${avif}" sizes="${sizes}">` : ""}
       <source type="image/webp" srcset="${srcset(p.sizes, "webp")}" sizes="${sizes}">
       <img src="${p.fallback}" width="${big.w}" height="${big.h}" alt="${esc(p.alt)}" ${attrs}>
     </picture>`;
@@ -83,7 +84,7 @@ ${preload ? `<link rel="preload" as="image" href="${esc(preload)}" fetchpriority
 
 const shell = (body) =>
   `<div class="ambient-photo" aria-hidden="true"></div><div class="ambient" aria-hidden="true"></div>` +
-  `<div class="topband" aria-hidden="true"></div>${body}`;
+  `<div class="topband" aria-hidden="true"></div>${body}<div class="lb-outlet"></div>`;
 
 function siteHeader(cfg, years) {
   return `<header class="site-header">

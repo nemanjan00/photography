@@ -69,9 +69,9 @@ function curiosities(d, picked) {
     if (v && !/^(unknown|not defined|undefined|n\/a|reserved)$/i.test(v)) rows.push({ label, value: v });
   };
 
-  // 35mm-equivalent field of view
+  // 35mm-equivalent field of view (e.g. 50mm on the DX/APS-C Z 50 ≈ 75mm)
   if (picked.focalLength35 && picked.focalLength35 !== picked.focalLength)
-    push("full-frame eq.", `${Math.round(picked.focalLength35)}mm`);
+    push("35mm equiv", `${Math.round(picked.focalLength35)}mm`);
 
   // computed light value (EV @ ISO100) — the "how bright was it" number
   if (picked.aperture && picked.shutter && picked.iso) {
