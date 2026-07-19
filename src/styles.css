@@ -68,35 +68,27 @@ body::before {
 }
 
 .ambient {
-  /* bleed vertically only — horizontal bleed would add mobile scroll width */
+  /* bleed vertically only — horizontal bleed would add mobile scroll width.
+     ONE composited layer: translate-only drift (no blur re-raster), no blend
+     (no scroll re-blend), so it stays on the GPU and never janks the scroll. */
   position: fixed; top: -20vmax; bottom: -20vmax; left: 0; right: 0; z-index: -2; pointer-events: none;
-  filter: blur(46px) saturate(var(--ambient-sat, 1.5));
-  opacity: .62;
-  transition: --c1 1.2s, --c2 1.2s, --c3 1.2s, --c4 1.2s, --c5 1.2s;
+  filter: blur(34px) saturate(var(--ambient-sat, 1.4));
+  opacity: .6; will-change: transform;
 }
-.ambient::before, .ambient::after {
-  content: ""; position: absolute; inset: 0;
-  mix-blend-mode: screen; /* colors glow *onto* the near-black page */
+.ambient::before {
+  content: ""; position: absolute; inset: 0; will-change: transform;
   background:
     radial-gradient(42vmax 42vmax at 18% 22%, var(--c1) 0%, transparent 62%),
     radial-gradient(46vmax 46vmax at 82% 30%, var(--c2) 0%, transparent 64%),
     radial-gradient(40vmax 40vmax at 30% 82%, var(--c3) 0%, transparent 62%),
     radial-gradient(50vmax 50vmax at 76% 78%, var(--c4) 0%, transparent 66%),
     radial-gradient(34vmax 34vmax at 50% 50%, var(--c5) 0%, transparent 60%);
-  animation: drift 34s ease-in-out infinite alternate;
+  animation: drift 40s ease-in-out infinite alternate;
 }
-.ambient::after { animation-duration: 52s; animation-direction: alternate-reverse; opacity: .7; }
 @keyframes drift {
-  0%   { transform: translate3d(-4%, -3%, 0) scale(1.05) rotate(0deg); }
-  50%  { transform: translate3d(5%, 2%, 0) scale(1.15) rotate(8deg); }
-  100% { transform: translate3d(-2%, 6%, 0) scale(1.08) rotate(-6deg); }
+  from { transform: translate3d(-3%, -2%, 0); }
+  to   { transform: translate3d(4%, 4%, 0); }
 }
-/* register the custom props so they can animate/transition smoothly */
-@property --c1 { syntax: "<color>"; inherits: true; initial-value: #3bbfae; }
-@property --c2 { syntax: "<color>"; inherits: true; initial-value: #a23b27; }
-@property --c3 { syntax: "<color>"; inherits: true; initial-value: #489f27; }
-@property --c4 { syntax: "<color>"; inherits: true; initial-value: #e0c341; }
-@property --c5 { syntax: "<color>"; inherits: true; initial-value: #6a4fd0; }
 
 /* Site-wide ambient wash: a huge, heavily-blurred copy of the photo you're
    looking at, bleeding its real colors across the whole page (YouTube
@@ -104,8 +96,8 @@ body::before {
 .ambient-photo {
   position: fixed; top: -12vmax; bottom: -12vmax; left: 0; right: 0; z-index: -3; pointer-events: none;
   background-size: cover; background-position: center;
-  filter: blur(90px) saturate(1.6);
-  opacity: .32; transition: opacity 1s ease;
+  filter: blur(48px) saturate(1.5);
+  opacity: .3; will-change: opacity;
 }
 
 /* Spotify-style top banner: a bold wash of the active photo's color pouring
@@ -114,10 +106,8 @@ body::before {
 .topband {
   position: fixed; top: 0; left: 0; right: 0; height: 56vh; z-index: -1; pointer-events: none;
   background: linear-gradient(180deg, var(--band, var(--accent)) 0%, transparent 70%);
-  opacity: .42; mix-blend-mode: screen;
-  transition: --band 1.1s ease, opacity 1s ease;
+  opacity: .4;
 }
-@property --band { syntax: "<color>"; inherits: true; initial-value: #3bbfae; }
 
 /* ── Header ──────────────────────────────────────────────────────────── */
 .site-header {
@@ -255,6 +245,44 @@ figcaption { padding: .5rem .15rem .2rem; display: flex; flex-wrap: wrap; align-
 .story-text-inner a { color: #fff; border-bottom: 2px solid #fff8; }
 .story-back { margin-top: 3rem; }
 .story-back a { color: var(--muted); }
+
+.story-play {
+  margin-top: 1.4rem; display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--mono); font-size: .85rem; color: #05050a; background: var(--accent);
+  border: 0; border-radius: 999px; padding: .55rem 1.1rem; cursor: pointer;
+  transition: transform .15s, filter .15s;
+}
+.story-play:hover { transform: translateY(-1px); filter: brightness(1.08); }
+/* desktop is a plain blog — the slideshow is a phone experience only */
+@media (min-width: 641px) { .story-play { display: none; } }
+
+/* ── Instagram-style slideshow player ────────────────────────────────── */
+.sp-overlay {
+  position: fixed; inset: 0; z-index: 80; background: #000;
+  display: grid; grid-template-rows: auto 1fr auto; touch-action: none; user-select: none;
+  animation: fade .2s ease;
+}
+.sp-overlay::before { /* ambient color from the current slide */
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5; filter: blur(70px);
+  background: radial-gradient(60% 50% at 50% 15%, var(--c1), transparent 70%),
+              radial-gradient(70% 60% at 50% 95%, var(--c2), transparent 72%);
+}
+.sp-bars { position: relative; z-index: 3; display: flex; gap: 4px; padding: 12px 12px 6px; }
+.sp-bar { flex: 1; height: 3px; border-radius: 2px; background: #ffffff3b; overflow: hidden; }
+.sp-bar i { display: block; height: 100%; width: 0; background: #fff; }
+.sp-close { position: absolute; top: 6px; right: 12px; z-index: 4; background: none; border: 0; color: #fff; font-size: 1.5rem; font-family: var(--mono); cursor: pointer; line-height: 1; }
+.sp-stage { position: relative; z-index: 1; min-height: 0; display: grid; place-items: center; }
+.sp-media { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+.sp-media img, .sp-media picture { max-width: 100%; max-height: 100%; object-fit: contain; }
+.sp-media iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.sp-vplay { position: absolute; inset: 0; margin: auto; width: 74px; height: 74px; border-radius: 50%; border: 0; background: #000a; color: #fff; font-size: 1.5rem; padding-left: 5px; cursor: pointer; }
+.sp-text { position: relative; z-index: 2; padding: 1rem clamp(1rem, 5vw, 2.5rem) 2rem; text-align: center; min-height: 2.5rem; }
+.sp-text-inner { max-width: 60ch; margin: 0 auto; color: #fff; font-size: clamp(1.05rem, 4vw, 1.35rem); line-height: 1.5; text-shadow: 0 2px 18px #000c; }
+.sp-strip { color: #fff; opacity: .85; font-size: .82rem; letter-spacing: .02em; }
+@media (min-width: 1000px) { /* desktop: phone-shaped card, IG-like */
+  .sp-stage .sp-media { max-width: 460px; }
+  .sp-overlay { background: #05050a; }
+}
 
 /* Desktop → blog: alternate the shots a touch off-center for rhythm */
 @media (min-width: 1000px) {
