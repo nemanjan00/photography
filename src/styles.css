@@ -273,7 +273,7 @@ figcaption { padding: .5rem .15rem .2rem; display: flex; flex-wrap: wrap; align-
 /* ── Instagram-style slideshow player ────────────────────────────────── */
 .sp-overlay {
   position: fixed; inset: 0; z-index: 80; background: #000;
-  display: grid; grid-template-rows: auto 1fr auto; touch-action: none; user-select: none;
+  display: grid; grid-template-rows: auto 1fr; touch-action: none; user-select: none;
   animation: fade .2s ease;
 }
 .sp-overlay::before { /* ambient color from the current slide */
@@ -290,9 +290,13 @@ figcaption { padding: .5rem .15rem .2rem; display: flex; flex-wrap: wrap; align-
 .sp-media img, .sp-media picture { max-width: 100%; max-height: 100%; object-fit: contain; }
 .sp-media iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .sp-vplay { position: absolute; inset: 0; margin: auto; width: 74px; height: 74px; border-radius: 50%; border: 0; background: #000a; color: #fff; font-size: 1.5rem; padding-left: 5px; cursor: pointer; }
-.sp-text { position: relative; z-index: 2; padding: 1rem clamp(1rem, 5vw, 2.5rem) 2rem; text-align: center; min-height: 2.5rem; }
-.sp-text-inner { max-width: 60ch; margin: 0 auto; color: #fff; font-size: clamp(1.05rem, 4vw, 1.35rem); line-height: 1.5; text-shadow: 0 2px 18px #000c; }
-.sp-strip { color: #fff; opacity: .85; font-size: .82rem; letter-spacing: .02em; }
+.sp-media .sp-strip { position: absolute; left: 0; right: 0; bottom: 1rem; text-align: center; color: #fff; opacity: .88; font-size: .78rem; letter-spacing: .02em; text-shadow: 0 1px 10px #000; }
+/* a text slide is its own full-screen Instagram-style gradient card */
+.sp-textslide { width: 100%; height: 100%; display: grid; place-items: center; padding: clamp(1.5rem, 8vw, 4rem);
+  background: linear-gradient(150deg, var(--c1), var(--c3) 55%, var(--c2)); }
+.sp-textslide-inner { max-width: 34ch; text-align: center; color: #fff; font-size: clamp(1.35rem, 6vw, 2.1rem); line-height: 1.45; text-shadow: 0 2px 22px #0008; }
+.sp-textslide-inner p { margin: .5rem 0; }
+.sp-textslide-inner a { color: #fff; border-bottom: 2px solid #fff9; }
 @media (min-width: 1000px) { /* desktop: phone-shaped card, IG-like */
   .sp-stage .sp-media { max-width: 460px; }
   .sp-overlay { background: #05050a; }
