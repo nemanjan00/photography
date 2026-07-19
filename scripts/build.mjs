@@ -129,6 +129,41 @@ async function processPhoto(file, ctx) {
   };
 }
 
+// A YouTube video → a media item that behaves like a photo: fetch its
+// thumbnail, run the SAME palette/LQIP/responsive pipeline, self-host the
+// poster (no YouTube request until play). Falls back gracefully offline.
+async function processVideo(id) {
+  const imgDir = path.join(OUT, "img");
+  await fs.mkdir(imgDir, { recursive: true });
+  let buf = null;
+  for (const q of ["maxresdefault", "sddefault", "hqdefault"]) {
+    try {
+      const r = await fetch(`https://i.ytimg.com/vi/${id}/${q}.jpg`);
+      if (r.ok) { const b = Buffer.from(await r.arrayBuffer()); if (b.length > 2000) { buf = b; break; } }
+    } catch { /* offline — try next / fall through */ }
+  }
+  if (!buf) return { id: `yt-${id}`, ytId: id, palette: { accent: "#e0245e", complements: ["#24e0a6"], dominant: ["#e0245e", "#24e0a6", "#e0c341", "#3bbfae", "#6a4fd0"] }, lqip: "none", sizes: [], fallback: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`, width: 16, height: 9, isVideo: true };
+
+  const tmp = path.join(imgDir, `vid-${id}-src.jpg`);
+  await fs.writeFile(tmp, buf);
+  const dim = await dimensions(tmp);
+  const [palette, lqip] = await Promise.all([extractPalette(tmp, B.paletteColors), lqipDataURI(tmp, B.lqip)]);
+  const widths = [...new Set(B.widths.filter((w) => w <= dim.width))];
+  if (!widths.length) widths.push(dim.width);
+  const sizes = [];
+  for (const w of widths) {
+    const [avif, webp] = await Promise.all([
+      w <= B.avifMaxWidth ? derive(tmp, path.join(imgDir, `vid-${id}-${w}.avif`), { width: w, format: "avif", quality: B.quality.avif, effort: B.effort.avif, srcW: dim.width }) : null,
+      derive(tmp, path.join(imgDir, `vid-${id}-${w}.webp`), { width: w, format: "webp", quality: B.quality.webp, effort: B.effort.webp, srcW: dim.width }),
+    ]);
+    if (webp) sizes.push({ w, h: webp.height, webp: `/img/vid-${id}-${w}.webp`, ...(avif ? { avif: `/img/vid-${id}-${w}.avif` } : {}) });
+  }
+  const fbW = widths.reduce((a, w) => (Math.abs(w - 800) < Math.abs(a - 800) ? w : a), widths[0]);
+  await derive(tmp, path.join(imgDir, `vid-${id}-${fbW}.jpg`), { width: fbW, format: "jpeg", quality: B.quality.jpeg, srcW: dim.width });
+  await fs.rm(tmp, { force: true });
+  return { id: `yt-${id}`, ytId: id, palette, lqip, sizes, fallback: `/img/vid-${id}-${fbW}.jpg`, width: dim.width, height: dim.height, isVideo: true };
+}
+
 async function loadStory(dir) {
   const rel = path.relative(PHOTOS, dir).split(path.sep);
   const [year, month, slug = path.basename(dir)] = rel;
@@ -151,7 +186,7 @@ async function loadStory(dir) {
     slug, url: `/story/${slug}/`,
     title: meta.title || slug,
     summaryHtml: story.summaryHtml,
-    videos: story.videos,          // YouTube ids — rendered as grid items, like photos
+    videos: await Promise.all(story.videos.map(processVideo)), // media items, like photos
     year: Number(year), month: `${year}-${month}`,
     date, photos,
   };
