@@ -21,6 +21,8 @@ export default {
     lang: "en",
     // Optional social handle for Twitter cards (with or without @).
     twitter: "",
+    // Public source repo (shown in the footer). Empty string hides the link.
+    repo: "https://github.com/nemanjan00/photography",
   },
 
   // ── The image pipeline (build.mjs) ──────────────────────────────────────
