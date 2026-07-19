@@ -1,8 +1,8 @@
 ---
 title: Kreševo
 ---
-**Kreševo**, a quiet Bosnian town — summer 2024. Mostly an excuse to get close
-to the flowers.
+**Kreševo**, a quiet Bosnian town — summer 2024, visiting family. Between the
+visits, mostly an excuse to get close to the flowers.
 
 ## DSC_8958
 Flowers, filling the frame.

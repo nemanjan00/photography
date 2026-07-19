@@ -173,8 +173,10 @@ async function copyFonts() {
   const src = path.join(ROOT, "node_modules/@fontsource/fira-code/files");
   const dst = path.join(OUT, "fonts");
   await fs.mkdir(dst, { recursive: true });
-  for (const w of [400, 500, 700])
+  for (const w of [400, 500, 700]) {
     await fs.copyFile(path.join(src, `fira-code-latin-${w}-normal.woff2`), path.join(dst, `fira-code-${w}.woff2`));
+    await fs.copyFile(path.join(src, `fira-code-latin-ext-${w}-normal.woff2`), path.join(dst, `fira-code-ext-${w}.woff2`));
+  }
 }
 
 async function main() {
