@@ -1,0 +1,249 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Frames — the whole look. You never edit this; the palette comes from
+   your photos at build time. Mono, dark, color splashed everywhere.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: "Fira Code";
+  font-style: normal; font-weight: 400; font-display: swap;
+  src: url("/fonts/fira-code-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Fira Code";
+  font-style: normal; font-weight: 500; font-display: swap;
+  src: url("/fonts/fira-code-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Fira Code";
+  font-style: normal; font-weight: 700; font-display: swap;
+  src: url("/fonts/fira-code-700.woff2") format("woff2");
+}
+
+:root {
+  --mono: "Fira Code", "Fira Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --bg: #08080b;
+  --bg-2: #0e0e13;
+  --fg: #e9e9ee;
+  --muted: #8b8b98;
+  --faint: #55555f;
+  --hair: #ffffff14;
+  /* Ambient palette — overwritten per-photo by JS; sensible defaults so the
+     page is colorful before a single byte of script runs. */
+  --c1: #3bbfae; --c2: #a23b27; --c3: #489f27; --c4: #e0c341; --c5: #6a4fd0;
+  --accent: #3bbfae; --comp: #d0503b;
+  --maxw: 1180px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  font-family: var(--mono);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.5;
+  font-size: 15px;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+/* ── Ambient: the big, faint, drifting color surface behind everything ──── */
+.ambient {
+  position: fixed; inset: -20vmax; z-index: -1; pointer-events: none;
+  filter: blur(46px) saturate(var(--ambient-sat, 1.5));
+  opacity: .78;
+  transition: --c1 1.2s, --c2 1.2s, --c3 1.2s, --c4 1.2s, --c5 1.2s;
+}
+.ambient::before, .ambient::after {
+  content: ""; position: absolute; inset: 0;
+  mix-blend-mode: screen; /* colors glow *onto* the near-black page */
+  background:
+    radial-gradient(42vmax 42vmax at 18% 22%, var(--c1) 0%, transparent 62%),
+    radial-gradient(46vmax 46vmax at 82% 30%, var(--c2) 0%, transparent 64%),
+    radial-gradient(40vmax 40vmax at 30% 82%, var(--c3) 0%, transparent 62%),
+    radial-gradient(50vmax 50vmax at 76% 78%, var(--c4) 0%, transparent 66%),
+    radial-gradient(34vmax 34vmax at 50% 50%, var(--c5) 0%, transparent 60%);
+  animation: drift 34s ease-in-out infinite alternate;
+}
+.ambient::after { animation-duration: 52s; animation-direction: alternate-reverse; opacity: .7; }
+@keyframes drift {
+  0%   { transform: translate3d(-4%, -3%, 0) scale(1.05) rotate(0deg); }
+  50%  { transform: translate3d(5%, 2%, 0) scale(1.15) rotate(8deg); }
+  100% { transform: translate3d(-2%, 6%, 0) scale(1.08) rotate(-6deg); }
+}
+/* register the custom props so they can animate/transition smoothly */
+@property --c1 { syntax: "<color>"; inherits: true; initial-value: #3bbfae; }
+@property --c2 { syntax: "<color>"; inherits: true; initial-value: #a23b27; }
+@property --c3 { syntax: "<color>"; inherits: true; initial-value: #489f27; }
+@property --c4 { syntax: "<color>"; inherits: true; initial-value: #e0c341; }
+@property --c5 { syntax: "<color>"; inherits: true; initial-value: #6a4fd0; }
+
+/* Site-wide ambient wash: a huge, heavily-blurred copy of the photo you're
+   looking at, bleeding its real colors across the whole page (YouTube
+   cinematic mode). JS swaps the image as you scroll the timeline. */
+.ambient-photo {
+  position: fixed; inset: -12vmax; z-index: -2; pointer-events: none;
+  background-size: cover; background-position: center;
+  filter: blur(90px) saturate(1.6);
+  opacity: .38; transition: opacity 1s ease;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────── */
+.site-header {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: clamp(1.4rem, 5vw, 4rem) clamp(1rem, 4vw, 2rem) 1rem;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem 1.2rem;
+}
+.brand { font-weight: 700; font-size: clamp(1.5rem, 5vw, 2.4rem); letter-spacing: -.02em; }
+.brand .dot { color: var(--accent); }
+.tagline { color: var(--muted); font-size: .82rem; }
+.site-nav { margin-left: auto; display: flex; gap: .9rem; flex-wrap: wrap; font-size: .8rem; }
+.site-nav a { color: var(--muted); padding: .15rem 0; border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
+.site-nav a:hover { color: var(--fg); border-color: var(--accent); }
+
+/* ── Timeline ────────────────────────────────────────────────────────── */
+.timeline { max-width: var(--maxw); margin: 0 auto; padding: 1rem clamp(1rem, 4vw, 2rem) 6rem; }
+.day { margin-top: clamp(2rem, 6vw, 5rem); }
+.day-marker {
+  position: sticky; top: 0; z-index: 3;
+  display: flex; align-items: center; gap: .8rem;
+  padding: .5rem 0; margin-bottom: 1rem;
+  background: linear-gradient(var(--bg) 55%, transparent);
+  backdrop-filter: blur(3px);
+}
+.day-marker time { font-weight: 500; font-size: .9rem; letter-spacing: .01em; }
+.day-marker .rule { flex: 1; height: 1px; background: var(--hair); }
+.day-marker .count { color: var(--faint); font-size: .72rem; }
+.day-marker .swatches { display: flex; gap: 3px; }
+.day-marker .swatches i { width: 9px; height: 9px; border-radius: 2px; display: block; }
+
+/* masonry: 1 col phone → airy multi-col on big screens */
+.grid { columns: 1; column-gap: clamp(.6rem, 2vw, 1.6rem); }
+.frame { break-inside: avoid; margin-bottom: clamp(.6rem, 2vw, 1.6rem); position: relative; }
+
+/* the per-photo glow — the photo's OWN blurred pixels bleed out around it
+   (the YouTube "ambient mode" trick), using the inline LQIP so it costs
+   nothing extra. Always faintly on; blooms on hover. */
+.frame::before {
+  content: ""; position: absolute; inset: -28px -28px 6px; z-index: -1;
+  border-radius: 22px;
+  background-image: var(--lqip); background-size: cover; background-position: center;
+  filter: blur(40px) saturate(1.7); opacity: .34; transform: scale(1.08);
+  transition: opacity .5s;
+}
+.frame:hover::before { opacity: .62; }
+
+.canvas {
+  position: relative; overflow: hidden; border-radius: 4px;
+  aspect-ratio: var(--ar, 3/2);
+  background-image: var(--lqip); background-size: cover; background-position: center;
+  box-shadow: 0 1px 0 var(--hair), 0 18px 40px -24px #000;
+}
+.canvas::after { /* subtle vignette + saturated sheen */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  box-shadow: inset 0 0 0 1px #ffffff10, inset 0 -60px 60px -50px #0009;
+}
+.canvas picture, .canvas img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* blur-up: only when JS is on; no-JS shows the image immediately */
+.js .canvas img { opacity: 0; transform: scale(1.04); transition: opacity .7s ease, transform 1.2s ease; }
+.js .canvas img.loaded { opacity: 1; transform: none; }
+
+figcaption { padding: .5rem .15rem .2rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .8rem; }
+.exif-strip { font-size: .74rem; color: var(--fg); letter-spacing: .01em; }
+.exif-strip b { color: var(--accent); font-weight: 500; }
+.gear { font-size: .68rem; color: var(--faint); margin-left: auto; }
+
+/* ── Optional markdown story ─────────────────────────────────────────── */
+.story {
+  margin: .6rem .15rem 0; padding: .9rem 1.1rem;
+  border-left: 2px solid var(--accent);
+  background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 10%, transparent), transparent);
+  border-radius: 0 6px 6px 0;
+  font-size: .82rem; color: #d7d7de;
+}
+.story :is(h1,h2,h3) { font-size: .95rem; margin: .4rem 0 .3rem; }
+.story p { margin: .4rem 0; }
+.story a { color: var(--accent); border-bottom: 1px solid #ffffff22; }
+.story code { background: #ffffff12; padding: .05em .35em; border-radius: 3px; font-size: .9em; }
+
+/* ── Lightbox (built by qrp on click) ────────────────────────────────── */
+.lb-backdrop {
+  position: fixed; inset: 0; z-index: 50;
+  background: #05050799; backdrop-filter: blur(14px) saturate(1.3);
+  display: grid; grid-template-rows: 1fr auto; padding: clamp(.6rem, 3vw, 2rem);
+  animation: fade .25s ease;
+}
+@keyframes fade { from { opacity: 0; } }
+.lb-glow { position: fixed; inset: 0; z-index: -1; opacity: .4; filter: blur(60px);
+  background: radial-gradient(50% 50% at 30% 30%, var(--accent), transparent 70%),
+             radial-gradient(50% 50% at 75% 80%, var(--comp), transparent 72%); }
+.lb-stage { min-height: 0; display: grid; place-items: center; }
+.lb-stage img { max-width: 100%; max-height: 100%; width: auto; height: auto; border-radius: 4px; box-shadow: 0 30px 80px -30px #000; }
+.lb-meta { padding-top: 1rem; display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; align-items: baseline; }
+.lb-meta .exif-strip { font-size: .9rem; }
+.lb-close { position: absolute; top: 1rem; right: 1.2rem; font-size: 1.4rem; color: var(--muted); background: none; border: 0; cursor: pointer; font-family: var(--mono); }
+.lb-close:hover { color: var(--fg); }
+.lb-nav { position: absolute; top: 50%; transform: translateY(-50%); background: #ffffff10; border: 1px solid var(--hair);
+  color: var(--fg); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; font-family: var(--mono); }
+.lb-prev { left: clamp(.4rem, 2vw, 1.5rem); }
+.lb-next { right: clamp(.4rem, 2vw, 1.5rem); }
+.lb-nav:hover { background: #ffffff22; }
+.lb-story { max-width: 62ch; margin: .6rem 0 0; color: #c9c9d2; font-size: .85rem; }
+.lb-dl, .dl-btn {
+  font-size: .74rem; color: var(--accent); border: 1px solid color-mix(in oklab, var(--accent) 50%, transparent);
+  padding: .25rem .6rem; border-radius: 4px; transition: background .2s, color .2s;
+}
+.lb-dl { margin-left: auto; }
+.lb-dl:hover, .dl-btn:hover { background: var(--accent); color: #05050a; }
+.dl-btn { display: inline-block; margin-top: .4rem; }
+
+/* ── Footer ──────────────────────────────────────────────────────────── */
+.site-footer { max-width: var(--maxw); margin: 0 auto; padding: 2rem clamp(1rem,4vw,2rem) 4rem; color: var(--faint); font-size: .72rem; border-top: 1px solid var(--hair); display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+.site-footer a { color: var(--muted); }
+
+/* ── Two intentions: dense phone → airy 4K ───────────────────────────── */
+@media (min-width: 640px)  { .grid { columns: 2; } }
+@media (min-width: 1100px) { :root { --maxw: 1180px; } .grid { columns: 2; } .timeline { padding-left: clamp(2rem,5vw,4rem); padding-right: clamp(2rem,5vw,4rem); } }
+@media (min-width: 1600px) { :root { --maxw: 1560px; } .grid { columns: 3; column-gap: 2rem; } .frame { margin-bottom: 2rem; } }
+@media (min-width: 2400px) { :root { --maxw: 2040px; } .grid { columns: 3; column-gap: 2.6rem; } body { font-size: 16px; } }
+
+/* On a phone, use the space: near edge-to-edge, tighter rhythm */
+@media (max-width: 520px) {
+  .timeline { padding-left: .7rem; padding-right: .7rem; }
+  .canvas { border-radius: 3px; }
+  .gear { display: none; }
+}
+
+/* Portrait phone + a horizontal photo → present it tall and slowly sweep
+   left→right across the width the narrow slot would otherwise waste.
+   Gated to on-screen frames (battery) and disabled under reduced-motion /
+   Save-Data (enhance.js only adds .motion-ok when motion is welcome). */
+@media (orientation: portrait) and (max-width: 640px) {
+  html.motion-ok .frame.landscape .canvas { aspect-ratio: 4 / 5; }
+  html.motion-ok .frame.landscape .canvas img {
+    inset: 0 auto 0 0; width: auto; height: 100%; max-width: none;
+    will-change: transform;
+  }
+  html.motion-ok .frame.landscape.in-view .canvas img { animation: sweep 13s ease-in-out infinite alternate; }
+}
+@keyframes sweep {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-28%); }
+}
+
+/* Full-bleed single-photo page hero */
+.photo-hero { max-width: 100%; }
+.photo-page .stage { max-width: min(96vw, 1800px); margin: 1rem auto; }
+.photo-page .stage img { width: 100%; height: auto; border-radius: 4px; box-shadow: 0 40px 100px -40px #000; }
+.photo-page .meta { max-width: var(--maxw); margin: 1.2rem auto; padding: 0 clamp(1rem,4vw,2rem); }
+.photo-page .meta .exif-strip { font-size: 1rem; }
+.photo-page .backlink { color: var(--muted); }
+.photo-page .pager { max-width: var(--maxw); margin: 2rem auto; padding: 0 clamp(1rem,4vw,2rem); display: flex; justify-content: space-between; font-size: .8rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient::before, .ambient::after { animation: none; }
+  .js .canvas img { transition: opacity .2s; transform: none; }
+  html { scroll-behavior: auto; }
+}

@@ -1,0 +1,26 @@
+# Render blueprint — static site that builds on push.
+# Point Render at this repo; it runs the build and serves dist/.
+services:
+  - type: web
+    name: frames
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    pullRequestPreviewsEnabled: true
+    # Long-cache the fingerprinted/immutable assets; HTML stays fresh.
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /img/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /fonts/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /*.html
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+    # Deep photo routes are real files (/photo/<id>/index.html), so no SPA
+    # rewrite is needed. Unknown paths fall through to Render's 404 handling;
+    # 404.html is emitted for hosts that serve a custom not-found page.
