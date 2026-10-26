@@ -17,7 +17,7 @@ evil form. Rule of crime, rule of money, rule of the cheap; rule of people who
 never learned to be ashamed.
 
 That night Ćacilend, their hooligan camp outside the Assembly, came down, and
-people carried its chairs home as trophies.
+people carried its chairs home as trophies. A beautiful night, full of hope.
 
 End of lies. End of blackmail. End of shame. End of fear.
 **Start of freedom.**
