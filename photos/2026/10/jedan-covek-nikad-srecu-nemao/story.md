@@ -4,6 +4,8 @@ location: Belgrade, Serbia
 description: Belgrade, 25 October 2026 — record turnout, a Student List majority, Vučić concedes. The streets on the night SNS fell.
 ---
 
+*“One man never had any luck.”*
+
 **Belgrade, 25 October 2026.** The night SNS fell.
 
 Almost two years after the Novi Sad station canopy collapsed and killed sixteen
@@ -24,7 +26,7 @@ never learned to be ashamed.
 Election day was incredible. In the first few hours turnout was double the last
 election's, and all we felt was hope. In the queue in Belgrade I didn't hear a
 single person speak for SNS — but I did watch unmarked cars bring homeless
-people in to vote. They were stealing votes, again.
+people in to vote, which told me they were stealing votes, again.
 
 The polls closed. Then an hour of silence. Then photos of SNS people getting
 ready to celebrate in Niš, and my dreams came crashing down. Should I leave
@@ -71,7 +73,7 @@ This is where they bought votes and threatened people. Now it's torn canvas in t
 alt: Celebrating with a red flare on the monument to the fallen of Kajmakčalan — walled inside Ćacilend, where people who came to pay their respects were beaten or questioned by police
 
 They had walled in the monument to the fallen of Kajmakčalan — people who came
-to pay their respects were beaten or questioned by police. Tonight it belonged
+to pay their respects were beaten or questioned by police. That night it belonged
 to everyone again.
 
 ## DSC_5353
@@ -106,9 +108,10 @@ alt: Heading home with a souvenir: a man carries a Ćacilend chair on his should
 Some were already heading home, a chair on their shoulders.
 
 ## DSC_5487
-alt: The city stopped: a man sits on a Ćacilend chair on the tram tracks, raising three fingers, a halted tram behind him
+alt: The city stopped: a man sits on a Ćacilend chair on the tram tracks, raising three fingers, the Serbian salute, a halted tram behind him
 
-The whole city stopped. Trams too.
+The whole city stopped. Trams too — and a man on a Ćacilend chair in front of
+one, three fingers up: the Serbian salute.
 
 ## DSC_5411
 alt: A Serbian celebration the traditional way: cars crawling through Belgrade, people hanging out of windows and sunroofs
@@ -118,7 +121,7 @@ And the traditional Serbian celebration — cars, flags, people hanging out of e
 ## DSC_5498
 alt: My friend, out in the streets with me on election night — I was best man at his wedding
 
-My friend joined me — I was best man at his wedding. Tonight we celebrated side by side.
+My friend joined me — I was best man at his wedding. That night we celebrated side by side.
 
 ## DSC_5500
 alt: People up on the steps of the National Assembly, singing into the night
@@ -139,7 +142,7 @@ Under Hram Svetog Save, still celebrating.
 alt: Celebrating at Slavija — where the last protest before the election was held, and where they used the LRAD sound cannon on us
 
 Slavija — where the last protest before the election was held, and where they
-turned the LRAD sound cannon on us. Tonight, it was ours.
+turned the LRAD sound cannon on us. That night, it was ours.
 
 ## DSC_5609
 alt: Slavija under a Ferrari flag — the symbol of Serbian resistance ever since a 1990s protester with no Serbian flag raised one instead, and it stuck
@@ -166,6 +169,6 @@ The smoke lingered, the billboards glowing through it. Nobody wanted to go home.
 ## DSC_5636
 alt: One last sign the whole city had stopped: two men on top of a tram, waving the flag of Belgrade through the smoke
 
-One last sign that everything had stopped: someone climbed a tram.
+One last sign that everything had stopped: two men climbed a tram.
 
 A beautiful night, full of hope.
