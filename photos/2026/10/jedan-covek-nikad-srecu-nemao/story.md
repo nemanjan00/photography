@@ -4,7 +4,7 @@ location: Belgrade, Serbia
 description: Belgrade, 25 October 2026 — record turnout, a Student List majority, Vučić concedes. The streets on the night SNS fell.
 ---
 
-*“One man never had any luck.”*
+*“May one man never have luck again”* — a curse, and everyone knows which man.
 
 **Belgrade, 25 October 2026.** The night SNS fell.
 
