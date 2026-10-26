@@ -67,6 +67,12 @@ alt: Pulling back: red flare smoke through the trees and the whole chaos of Ćac
 
 Step back, and it was beautiful chaos.
 
+## DSC_5394
+alt: A popcorn bag burning on a zebra crossing, popcorn scattered across the street — SNS going up in smoke
+
+Someone set a bag of popcorn on fire in the middle of the crossing. I like to
+think it was SNS burning — and finally going away.
+
 ## DSC_5371
 alt: Celebrating people in focus across the street, the lit National Assembly melting into bokeh behind them
 
