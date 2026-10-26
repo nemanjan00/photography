@@ -74,13 +74,13 @@ alt: Crowd celebrating at Slavija, where the last protest before the election wa
 alt: People on top of a kiosk, celebrating above the crowd
 
 ## DSC_5609
-alt: A massive crowd fills the street at night, flags waving above heads
+alt: Massive crowd at Slavija with a Ferrari flag waving above it, the symbol of Serbian resistance since a 1990s protester who had no Serbian flag raised a Ferrari one instead
 
 ## DSC_5629
-alt: Fireworks and flare smoke erupt over the silhouetted crowd at night
+alt: People with pyrotechnics, fireworks and flare smoke erupting over the silhouetted crowd on election night in Belgrade
 
 ## DSC_5635
-alt: Purple-tinted smoke drifting over the crowd under a streetlamp in Belgrade
+alt: Smoke left over from the pyrotechnics hanging over the crowd, colorful billboards glowing behind — people celebrating late into the night
 
 ## DSC_5636
-alt: Two men stand on a vehicle roof waving the flag of Belgrade amid smoke on election night
+alt: One last sign of the whole city stopping: two men climbed on top of a tram, waving the flag of Belgrade through the smoke
