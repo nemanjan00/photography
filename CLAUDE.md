@@ -8,7 +8,7 @@ Photography — a static, generated timeline photo gallery. Read before changing
 
 ```sh
 npm install
-npm run ingest <image|dir> [more…]  # file photos by EXIF date → photos/YYYY/MM/DD/ (develops RAW)
+npm run ingest -- --story <slug> [--title "T"] <image|dir> [more…]  # → photos/YEAR/MONTH/<slug>/ (develops RAW)
 npm run build                       # photos/ → dist/ (bundled sharp — same as Render)
 PHOTO_ENGINE=imagemagick npm run build  # opt into ImageMagick instead of sharp
 npm run serve                       # static-serve dist/ at http://127.0.0.1:8787
@@ -29,19 +29,20 @@ The owner adds photos and pushes; Render rebuilds. No hand-written CSS, no CMS.
 ## Architecture (data flow)
 
 ```
-originals ──ingest──▶ photos/YYYY/MM/DD/*.jpg ──build──▶ dist/
+originals ──ingest──▶ photos/YEAR/MONTH/<story>/*.jpg + story.md ──build──▶ dist/
  (RAW/JPEG)           (capped "working masters",          (static HTML + responsive
                        committed to git)                    images + qrp bundle)
 ```
 
 - **`scripts/ingest.mjs`** — CLI. Reads EXIF capture date, files photos into
-  `photos/YYYY/MM/DD/`, converts each to a git-sane JPEG master (long edge
+  `photos/YEAR/MONTH/<story>/` (`--story <slug>`), scaffolds `story.md`, converts each to a git-sane JPEG master (long edge
   ≤ `ingest.masterMaxEdge`). RAW (`.nef`…) is developed via `darktable-cli` →
   `dcraw` → **carve largest embedded JPEG** (`carveLargestJpeg`, pure JS — works
   with no RAW tool). Originals are NOT committed; RAW is gitignored.
 - **`scripts/build.mjs`** — orchestrator. Per photo: `readExif` (allowlisted),
   `dimensions`, `extractPalette`, `lqipDataURI`, `derive` (responsive sizes),
-  optional `<stem>.md` story. Then pre-renders HTML, bundles JS (esbuild),
+  per story `story.md` (summary, `<!-- more -->`, `## <stem>` sections = order,
+  `alt:` lines). Then pre-renders HTML, bundles JS (esbuild),
   inlines minified CSS, copies fonts, writes sitemap/robots/LICENSE. Output is
   `dist/` (gitignored).
 - **`scripts/lib/`** — `engine.mjs` (image back ends), `image.mjs`, `palette.mjs`,

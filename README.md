@@ -23,8 +23,9 @@ top. **You never touch the site and never write a line of CSS.**
 
 ```sh
 npm install
-npm run ingest ~/Pictures/*.NEF   # file photos by EXIF date into photos/YYYY/MM/DD/
-git add photos && git commit -m "new photos"
+npm run ingest -- --story bled --title "Bled, Slovenia" ~/Pictures/bled/
+$EDITOR photos/2022/04/bled/story.md   # write the story
+git add photos && git commit -m "new story"
 git push                          # Render rebuilds and deploys
 ```
 
@@ -42,17 +43,21 @@ npm run serve
 ### `ingest` — get photos in
 
 ```sh
-npm run ingest <image|dir> [more…]
+npm run ingest -- --story <slug> [--title "Title"] <image|dir> [more…]
 ```
 
-Reads each file's EXIF capture date and files it into `photos/YYYY/MM/DD/`,
-converting to a **capped, git-sane working master** (JPEG, long edge ≤ 4096 px
+Files the photos into a **story** folder, `photos/YEAR/MONTH/<slug>/` (year and
+month from the earliest EXIF capture date; an existing `<slug>` folder is
+reused, so you can add photos to a story later). Each file is converted to a **capped, git-sane working master** (JPEG, long edge ≤ 4096 px
 by default). RAW is developed on the way in:
 
 - `darktable-cli` or `dcraw` if installed (best), otherwise
 - the **full-res JPEG preview carved straight out of the RAW bytes** — so
   Nikon `.nef` import works with *no* RAW tool at all (it's your in-camera
   render, which is usually what you want).
+
+Allowlisted EXIF is embedded into the master, and a `story.md` is scaffolded
+(title + a `## <stem>` section per photo) for you to write into.
 
 Your true originals stay wherever they already are; only the capped master is
 committed, so the repo never balloons.
@@ -65,9 +70,9 @@ npm run build     # → dist/
 
 For every master it: reads allowlisted EXIF, measures it, extracts a palette
 (+ complements), makes a ~6px inline blur, and emits responsive AVIF/WebP/JPEG
-(metadata-stripped). Then it pre-renders the timeline + a page per photo with
-meta/OG/JSON-LD, writes `sitemap.xml`/`robots.txt`, and bundles the qrp
-enhancement layer.
+(metadata-stripped). Then it pre-renders the timeline, a page per story and a
+page per photo with meta/OG/JSON-LD, writes `sitemap.xml` (with images) and
+`robots.txt`, and bundles the qrp enhancement layer.
 
 ## Configuration
 
@@ -84,17 +89,37 @@ absent; add `"gps"` only if you want location published.
 
 ## Stories
 
-Drop a Markdown file next to a photo (`DSC_1234.md` beside `DSC_1234.jpg`) and
-it renders as a story woven into the timeline and photo page. Optional
-frontmatter:
+Every folder under `photos/YEAR/MONTH/` is a story: its photos plus a
+`story.md`. On desktop a story is a blog (photo → text → photo…); on a phone it
+opens as a full-screen slideshow.
 
 ```markdown
 ---
-title: The old town at dusk
-alt: A church spire lit gold against a pale winter sky
+title: Bled, Slovenia
+location: Bled, Slovenia            # optional → JSON-LD Place, photo alt fallback
+description: Lake, island, castle.  # optional meta/OG description override
 ---
-The light only does this for about ten minutes in December…
+**Bled** — the summary. This part shows on the timeline card.
+
+<!-- more -->
+
+Anything below the marker shows only on the story page (and as the
+slideshow's opening text slides).
+
+## DSC_1234
+alt: A church spire lit gold against a pale winter sky
+
+Text shown after this photo (one slideshow slide per paragraph).
+
+## DSC_1240
+alt: …
 ```
+
+- The order of the `## <stem>` sections **is** the story order — move a
+  section to move its photo. Photos without a section follow, by time.
+- `alt:` is the photo's description for search and screen readers (alt text,
+  photo-page title, JSON-LD). It is never shown as story text.
+- A YouTube URL on its own line embeds the video as part of the story.
 
 ## Deploy (Render)
 
