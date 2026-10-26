@@ -23,9 +23,9 @@ function fmtDT(v) {
 
 export async function embedExifFromOriginal(originalPath, jpgPath, allow) {
   // read raw NUMERIC values (no translation) so codes embed as codes
-  const d = await exifr.parse(originalPath, {
+  const d = await fs.readFile(originalPath).then((buf) => exifr.parse(buf, { // Buffer: see readExif
     translateValues: false, reviveValues: true, tiff: true, ifd0: true, exif: true, gps: false,
-  }).catch(() => null);
+  })).catch(() => null);
   if (!d) return false;
 
   const on = (f) => allow.includes(f);

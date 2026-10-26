@@ -1,4 +1,5 @@
 import exifr from "exifr";
+import fs from "node:fs/promises";
 
 // We ask exifr for a broad read, then pull ONLY the fields we map below.
 // The allowlist is enforced here in code: anything not mapped is discarded,
@@ -47,7 +48,9 @@ function toISO(v) {
 export async function readExif(file, allow) {
   let d = null;
   try {
-    d = await exifr.parse(file, { tiff: true, ifd0: true, exif: true, gps: false });
+    // a Buffer, not the path: exifr's chunked file reader leaves FileHandles
+    // to the GC, which Node ≥25 turns into a fatal ERR_INVALID_STATE
+    d = await exifr.parse(await fs.readFile(file), { tiff: true, ifd0: true, exif: true, gps: false });
   } catch {
     d = null;
   }

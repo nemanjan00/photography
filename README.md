@@ -98,6 +98,7 @@ opens as a full-screen slideshow.
 title: Bled, Slovenia
 location: Bled, Slovenia            # optional → JSON-LD Place, photo alt fallback
 description: Lake, island, castle.  # optional meta/OG description override
+cover: DSC_1234                     # optional (default: first photo) → story-page cover, share image, slideshow title card
 ---
 **Bled** — the summary. This part shows on the timeline card.
 

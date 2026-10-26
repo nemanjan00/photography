@@ -42,7 +42,8 @@ originals ──ingest──▶ photos/YEAR/MONTH/<story>/*.jpg + story.md ─�
 - **`scripts/build.mjs`** — orchestrator. Per photo: `readExif` (allowlisted),
   `dimensions`, `extractPalette`, `lqipDataURI`, `derive` (responsive sizes),
   per story `story.md` (summary, `<!-- more -->`, `## <stem>` sections = order,
-  `alt:` lines). Then pre-renders HTML, bundles JS (esbuild),
+  `alt:` lines, optional `cover: <stem>` = story-page hero + share image +
+  slideshow title card). Then pre-renders HTML, bundles JS (esbuild),
   inlines minified CSS, copies fonts, writes sitemap/robots/LICENSE. Output is
   `dist/` (gitignored).
 - **`scripts/lib/`** — `engine.mjs` (image back ends), `image.mjs`, `palette.mjs`,
