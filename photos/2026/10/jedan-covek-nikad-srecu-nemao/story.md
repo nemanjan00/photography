@@ -32,23 +32,29 @@ Serbia?
 
 Five minutes later, Vučić went on TV and admitted defeat.
 
-## DSC_5320
-alt: Crowd stepping over the torn-down fences of Ćacilend, the SNS camp outside the National Assembly, celebrating its end
+## DSC_5277
+alt: A smiling man walking his small white dog under amber streetlights on election night — people dropped whatever they were doing and went out to celebrate
 
 First, shock. Then a happiness I can't describe — free, at last, of the evil
 done to all Serbian people, and to my family. Then relief, after such a long
 fight and an especially hard week. I'm not ashamed to say I cried. Tears of joy.
 
 I set off for the Assembly and nothing could stop me. Nobody cared about red
-lights, nobody cared where we were going — everyone just went where they felt
-they should. We had won. I wanted to hug the whole world.
+lights, nobody cared where we were going — people dropped whatever they were
+doing, dog leash still in hand, and went where they felt they should. We had
+won. I wanted to hug the whole world.
 
-## DSC_5324
-alt: A young man holds up a white chair from the wrecked Ćacilend camp like a trophy, happy people all around him
+## DSC_5320
+alt: Crowd stepping over the torn-down fences of Ćacilend, the SNS camp outside the National Assembly, celebrating its end
 
 I came expecting thousands of hooligans behind that fence. The fence was
 gone. People were walking out of Ćacilend smiling, holding its white chairs
 over their heads like they had won the world.
+
+## DSC_5324
+alt: A young man holds up a white chair from the wrecked Ćacilend camp like a trophy, happy people all around him
+
+Every chair a trophy.
 
 ## DSC_5331
 alt: A collapsed Ćacilend tent in the dark park — the end of SNS vote buying and intimidation
