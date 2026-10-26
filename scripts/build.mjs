@@ -66,16 +66,19 @@ function parseStoryBody(rawBody) {
   const { ids: videos, cleaned: body } = extractVideos(rawBody);
   const parts = body.split(/^##[ \t]+/m);
   const summary = parts.shift().trim();
-  const perPhoto = {};
+  const perPhoto = {}, perPhotoAlt = {};
   const order = [];
   for (const part of parts) {
     const nl = part.indexOf("\n");
     const stem = (nl < 0 ? part : part.slice(0, nl)).trim();
-    const text = (nl < 0 ? "" : part.slice(nl + 1)).trim();
+    // an `alt: …` line describes the frame for search + screen readers; it is
+    // published as alt text / JSON-LD only, never shown as story text
+    const text = (nl < 0 ? "" : part.slice(nl + 1))
+      .replace(/^alt:[ \t]*(.+)$/im, (_, a) => ((perPhotoAlt[stem] = a.trim()), "")).trim();
     perPhoto[stem] = text ? marked.parse(text).trim() : null;
     order.push(stem);
   }
-  return { summaryHtml: summary ? marked.parse(summary).trim() : "", perPhoto, order, videos };
+  return { summaryHtml: summary ? marked.parse(summary).trim() : "", perPhoto, perPhotoAlt, order, videos };
 }
 
 // ── discover stories: leaf folders containing images ──────────────────────
@@ -117,8 +120,10 @@ async function processPhoto(file, ctx) {
   await derive(file, path.join(imgDir, `${id}-full.jpg`), { width: dim.width, format: "jpeg", quality: 88, saturate: B.saturate, srcW: dim.width, fullChroma: B.fullChroma });
 
   const d = exif.display || {};
-  const alt = [d.body, d.lens, d.strip].filter(Boolean).join(" · ") ||
-    `Photograph — ${new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`;
+  const when = new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  const alt = ctx.perPhotoAlt[stem] ||
+    [ctx.title, ctx.location, when].filter(Boolean).join(" — ") ||
+    [d.body, d.lens, d.strip].filter(Boolean).join(" · ");
 
   return {
     id, url: `/photo/${id}/`, date, stem,
@@ -169,7 +174,7 @@ async function loadStory(dir) {
   const [year, month, slug = path.basename(dir)] = rel;
   const files = (await fs.readdir(dir)).filter((f) => IMG_RE.test(f)).map((f) => path.join(dir, f)).sort();
 
-  let meta = {}, story = { summaryHtml: "", perPhoto: {}, order: [] };
+  let meta = {}, story = { summaryHtml: "", perPhoto: {}, perPhotoAlt: {}, order: [] };
   try {
     const parsed = parseFrontmatter(await fs.readFile(path.join(dir, "story.md"), "utf8"));
     meta = parsed.meta;
@@ -177,7 +182,7 @@ async function loadStory(dir) {
   } catch { /* no story.md */ }
 
   const fallbackDate = `${year}-${month}-15T12:00:00.000Z`;
-  const photos = await mapLimit(files, cpuCount, (f) => processPhoto(f, { perPhoto: story.perPhoto, fallbackDate }));
+  const photos = await mapLimit(files, cpuCount, (f) => processPhoto(f, { perPhoto: story.perPhoto, perPhotoAlt: story.perPhotoAlt, title: meta.title || slug, location: meta.location || "", fallbackDate }));
   photos.sort((a, b) => new Date(a.date) - new Date(b.date)); // chronological within a trip
 
   const metaDate = meta.date ? new Date(meta.date) : null;
@@ -185,6 +190,8 @@ async function loadStory(dir) {
   return {
     slug, url: `/story/${slug}/`,
     title: meta.title || slug,
+    description: meta.description || "", // optional SEO override in story.md frontmatter
+    location: meta.location || "",       // optional, e.g. "Belgrade, Serbia" → JSON-LD Place
     summaryHtml: story.summaryHtml,
     videos: await Promise.all(story.videos.map(processVideo)), // media items, like photos
     year: Number(year), month: `${year}-${month}`,
@@ -276,9 +283,12 @@ async function main() {
 
   await fs.writeFile(path.join(OUT, "sitemap.xml"), renderSitemap({ stories, photos: allPhotos, cfg: config }));
   await fs.writeFile(path.join(OUT, "robots.txt"), robotsTxt(config));
+  // favicon (search results show it): the brand's accent dot on the dark ground
+  await fs.writeFile(path.join(OUT, "favicon.svg"),
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect width="48" height="48" rx="10" fill="#08080b"/><circle cx="24" cy="24" r="11" fill="#3bbfae"/></svg>`);
   await fs.copyFile(path.join(ROOT, "LICENSE.txt"), path.join(OUT, "LICENSE.txt")).catch(() => {});
   await fs.writeFile(path.join(OUT, "404.html"),
-    renderIndex({ months, all: allPhotos, stories, cfg: config, css, appJs, dataJson: dataIsland(allPhotos) }));
+    renderIndex({ months, all: allPhotos, stories, cfg: config, css, appJs, dataJson: dataIsland(allPhotos), noindex: true }));
 
   console.log(`✓ built ${allPhotos.length} photos · ${stories.length} stories → ${path.relative(ROOT, OUT)}/  (${((Date.now() - t0) / 1000).toFixed(1)}s)`);
 }

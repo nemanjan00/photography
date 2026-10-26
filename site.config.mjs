@@ -15,9 +15,7 @@ export default {
       "processed to punch, published without touching a line of CSS.",
     // Canonical origin — drives <link rel=canonical>, OG URLs, sitemap.
     // Set this to your real Render URL (no trailing slash).
-    // Permanent home (DNS pending). Until it resolves, the site also works at
-    // the Render URL — canonical/OG point here so SEO settles on the real home.
-    url: "https://photography.nemanja.top",
+    url: "https://photo.nemanja.top",
     lang: "en",
     // Optional social handle for Twitter cards (with or without @).
     twitter: "nemanjan00",

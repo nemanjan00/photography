@@ -93,9 +93,10 @@ qrp is the owner's own framework. **Before editing `src/enhance.js`, read**
 
 ## Effects (all in enhance.js + styles.css)
 
-Ambient color wash (blurred copy of the active photo, YouTube-style) + drifting
-palette gradients; blur-up reveal; scroll-driven color bleed (IntersectionObserver
-→ qrp `state`/`effect`); device-aware parallax (mouse / gyro tilt, iOS perm);
+Background is a **static** gradient precomputed at build (`html.mjs →
+timelineGradient`, set as `--tl` on `<body>`): each photo's accent placed where
+it roughly sits on the page. No JS, no fixed layers — don't reintroduce a
+scroll-driven/adaptive background. Blur-up reveal;
 portrait-phone landscape "sweep" (CSS, gated by `.motion-ok` + `.in-view`);
 keyed lightbox with prev/next + full-res download. All motion respects
 `prefers-reduced-motion` and `navigator.connection.saveData`.
@@ -104,4 +105,4 @@ keyed lightbox with prev/next + full-res download. All motion respects
 
 `render.yaml` → static site, `npm ci && npm run build`, publish `dist/`.
 Canonical/OG URL is `site.config.mjs → site.url` (currently
-`photography.nemanja.top`). Do not push on the owner's behalf.
+`photo.nemanja.top`). Do not push on the owner's behalf.
