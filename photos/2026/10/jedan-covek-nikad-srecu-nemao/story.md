@@ -25,7 +25,19 @@ End of lies. End of blackmail. End of shame. End of fear.
 ## DSC_5320
 alt: Crowd stepping over the torn-down fences of Ćacilend, the SNS camp outside the National Assembly, celebrating its end
 
-When Vučić conceded, I was in shock at first. Then came an immense happiness —
+Election day was just incredible. It gave us so much hope — in the first few
+hours turnout was double that of previous elections, and we just felt
+happiness. I voted in Belgrade, and in the whole queue I didn't hear a single
+person say they supported SNS. I did see homeless people being brought to vote
+in unmarked cars, which told me they were stealing votes, again.
+
+Then night came and the polling stations closed. Then silence, for about an
+hour. Then I saw photos of SNS people getting ready to celebrate in Niš, and my
+dreams came crashing down. Should I move out of Serbia?
+
+Five minutes later, Vučić went on TV and admitted defeat.
+
+I was in shock at first. Then came an immense happiness —
 finally freed of the evil that was done to all Serbian people, and to my
 family. Then relief that it was over, after such a long fight and an especially
 intense week. I'm not ashamed to say I let a few tears out. Tears of joy.
