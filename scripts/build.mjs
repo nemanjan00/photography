@@ -78,7 +78,16 @@ function parseStoryBody(rawBody) {
     perPhoto[stem] = text ? marked.parse(text).trim() : null;
     order.push(stem);
   }
-  return { summaryHtml: summary ? marked.parse(summary).trim() : "", perPhoto, perPhotoAlt, order, videos };
+  // `<!-- more -->` in the summary: the timeline card shows only what's above
+  // it (the teaser); the story page shows everything
+  const cut = summary.search(/^[ \t]*<!--\s*more\s*-->[ \t]*$/m);
+  const teaser = cut < 0 ? "" : summary.slice(0, cut).trim();
+  const full = summary.replace(/^[ \t]*<!--\s*more\s*-->[ \t]*$/m, "").trim();
+  return {
+    summaryHtml: full ? marked.parse(full).trim() : "",
+    teaserHtml: teaser ? marked.parse(teaser).trim() : "",
+    perPhoto, perPhotoAlt, order, videos,
+  };
 }
 
 // ── discover stories: leaf folders containing images ──────────────────────
@@ -198,6 +207,7 @@ async function loadStory(dir) {
     description: meta.description || "", // optional SEO override in story.md frontmatter
     location: meta.location || "",       // optional, e.g. "Belgrade, Serbia" → JSON-LD Place
     summaryHtml: story.summaryHtml,
+    teaserHtml: story.teaserHtml || story.summaryHtml, // timeline card
     videos: await Promise.all(story.videos.map(processVideo)), // media items, like photos
     year: Number(year), month: `${year}-${month}`,
     date, photos,

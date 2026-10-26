@@ -206,16 +206,10 @@ figcaption { padding: .5rem .15rem .2rem; display: flex; flex-wrap: wrap; align-
 .story-shot .canvas { aspect-ratio: var(--ar, 3/2); }
 .story-shot figcaption { justify-content: flex-start; }
 
-.story-text {
-  position: relative; border-radius: 14px; overflow: hidden;
-  padding: clamp(1.6rem, 6vw, 3.5rem);
-  /* Instagram-story gradient from the upcoming photo's palette */
-  background: linear-gradient(135deg, var(--c1), var(--c3) 55%, var(--c2));
-}
-.story-text::before { /* darken for legibility without killing the color */
-  content: ""; position: absolute; inset: 0; background: #05050866;
-}
-.story-text-inner { position: relative; max-width: 60ch; margin: 0 auto; color: #fff; text-shadow: 0 1px 14px #0009; font-size: clamp(1.05rem, 2.6vw, 1.35rem); line-height: 1.6; }
+/* desktop/tablet: the text between photos is plain prose — a blog column on
+   the page's own gradient. Phones get the gradient cards (see the ≤640px block). */
+.story-text { position: relative; }
+.story-text-inner { position: relative; max-width: 60ch; margin: 0 auto; color: #ececf2; text-shadow: var(--tsh); font-size: clamp(1.05rem, 2.2vw, 1.22rem); line-height: 1.75; }
 .story-text-inner :is(h1,h2,h3) { font-weight: 700; margin: 0 0 .4rem; }
 .story-text-inner p { margin: .5rem 0; }
 .story-text-inner a { color: #fff; border-bottom: 2px solid #fff8; }
@@ -269,6 +263,7 @@ figcaption { padding: .5rem .15rem .2rem; display: flex; flex-wrap: wrap; align-
   .story-flow { gap: 4.5rem; }
   .story-shot { width: 100%; }
   .story-text { margin: 0 auto; max-width: 760px; }
+  .story-flow > .story-text + .story-shot, .story-flow > .story-shot + .story-text { margin-top: -1.5rem; } /* prose sits close to its photo */
 }
 
 /* Phone → reel: full-height snap sections, photo/text fill the viewport */
@@ -279,7 +274,16 @@ figcaption { padding: .5rem .15rem .2rem; display: flex; flex-wrap: wrap; align-
   .story-shot { scroll-snap-align: start; }
   .story-shot .canvas { aspect-ratio: auto; height: 82vh; border-radius: 0; }
   .story-shot figcaption { padding: .5rem 1.1rem; }
-  .story-text { border-radius: 0; min-height: 60vh; display: grid; align-items: center; scroll-snap-align: start; }
+  .story-text {
+    border-radius: 0; min-height: 60vh; display: grid; align-items: center; scroll-snap-align: start;
+    overflow: hidden; padding: clamp(1.6rem, 6vw, 3.5rem);
+    /* Instagram-story card: gradient from the upcoming photo's palette */
+    background: linear-gradient(135deg, var(--c1), var(--c3) 55%, var(--c2));
+  }
+  .story-text::before { /* darken for legibility without killing the color */
+    content: ""; position: absolute; inset: 0; background: #05050866;
+  }
+  .story-text-inner { color: #fff; text-shadow: 0 1px 14px #0009; font-size: clamp(1.05rem, 2.6vw, 1.35rem); line-height: 1.6; }
 }
 
 /* ── Lightbox (built by qrp on click) ────────────────────────────────── */
