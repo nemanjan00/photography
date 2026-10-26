@@ -1,6 +1,7 @@
 ---
 title: Jedan čovek nikad sreću nemao
 location: Belgrade, Serbia
+cover: DSC_5478
 description: Belgrade, 25 October 2026 — record turnout, a Student List majority, Vučić concedes. The streets on the night SNS fell.
 ---
 

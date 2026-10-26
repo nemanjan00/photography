@@ -208,6 +208,7 @@ async function loadStory(dir) {
     title: meta.title || slug,
     description: meta.description || "", // optional SEO override in story.md frontmatter
     location: meta.location || "",       // optional, e.g. "Belgrade, Serbia" → JSON-LD Place
+    cover: photos.find((p) => p.stem === meta.cover) || photos[0] || null, // optional `cover: <stem>` → share image + slideshow title card
     summaryHtml: story.summaryHtml,
     teaserHtml: story.teaserHtml || story.summaryHtml, // timeline card
     restHtml: story.teaserHtml ? story.restHtml : "",
