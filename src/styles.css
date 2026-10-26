@@ -252,6 +252,10 @@ figcaption { padding: .5rem .15rem .2rem; display: flex; flex-wrap: wrap; align-
   background: linear-gradient(150deg, var(--c1), var(--c3) 55%, var(--c2)); }
 .sp-textslide-inner { max-width: 34ch; text-align: center; color: #fff; font-size: clamp(1.35rem, 6vw, 2.1rem); line-height: 1.45; text-shadow: 0 2px 22px #0008; }
 .sp-textslide-inner p { margin: .5rem 0; }
+/* the opening title card: title + date + the teaser, smaller so it all fits */
+.sp-titlecard .sp-textslide-inner { font-size: clamp(1rem, 4.2vw, 1.3rem); line-height: 1.5; }
+.sp-title { font-size: clamp(1.7rem, 8vw, 2.6rem); font-weight: 700; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 .3rem; }
+.sp-when { font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; opacity: .8; margin: 0 0 1rem !important; }
 .sp-textslide-inner a { color: #fff; border-bottom: 2px solid #fff9; }
 @media (min-width: 1000px) { /* desktop: phone-shaped card, IG-like */
   .sp-stage .sp-media { max-width: 460px; }

@@ -83,9 +83,11 @@ function parseStoryBody(rawBody) {
   const cut = summary.search(/^[ \t]*<!--\s*more\s*-->[ \t]*$/m);
   const teaser = cut < 0 ? "" : summary.slice(0, cut).trim();
   const full = summary.replace(/^[ \t]*<!--\s*more\s*-->[ \t]*$/m, "").trim();
+  const rest = cut < 0 ? "" : summary.slice(cut).replace(/^[ \t]*<!--\s*more\s*-->[ \t]*$/m, "").trim();
   return {
     summaryHtml: full ? marked.parse(full).trim() : "",
     teaserHtml: teaser ? marked.parse(teaser).trim() : "",
+    restHtml: rest ? marked.parse(rest).trim() : "", // the part only the story page shows
     perPhoto, perPhotoAlt, order, videos,
   };
 }
@@ -208,6 +210,7 @@ async function loadStory(dir) {
     location: meta.location || "",       // optional, e.g. "Belgrade, Serbia" → JSON-LD Place
     summaryHtml: story.summaryHtml,
     teaserHtml: story.teaserHtml || story.summaryHtml, // timeline card
+    restHtml: story.teaserHtml ? story.restHtml : "",
     videos: await Promise.all(story.videos.map(processVideo)), // media items, like photos
     year: Number(year), month: `${year}-${month}`,
     date, photos,
