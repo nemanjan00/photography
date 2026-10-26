@@ -147,7 +147,7 @@ async function processVideo(id) {
       if (r.ok) { const b = Buffer.from(await r.arrayBuffer()); if (b.length > 2000) { buf = b; break; } }
     } catch { /* offline — try next / fall through */ }
   }
-  if (!buf) return { id: `yt-${id}`, ytId: id, palette: { accent: "#e0245e", complements: ["#24e0a6"], dominant: ["#e0245e", "#24e0a6", "#e0c341", "#3bbfae", "#6a4fd0"] }, lqip: "none", sizes: [], fallback: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`, width: 16, height: 9, isVideo: true };
+  if (!buf) return { id: `yt-${id}`, ytId: id, palette: { accent: "#e0245e", tone: "#e0245e", complements: ["#24e0a6"], dominant: ["#e0245e", "#24e0a6", "#e0c341", "#3bbfae", "#6a4fd0"] }, lqip: "none", sizes: [], fallback: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`, width: 16, height: 9, isVideo: true };
 
   const tmp = path.join(imgDir, `vid-${id}-src.jpg`);
   await fs.writeFile(tmp, buf);

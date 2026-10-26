@@ -95,7 +95,27 @@ export async function extractPalette(file, n = 6) {
     picked.slice().sort((a, b) => b.s * (1 - Math.abs(b.l - 0.55)) - a.s * (1 - Math.abs(a.l - 0.55)))[0]?.hex ||
     dominant[0];
 
-  return { dominant, complements, accent };
+  // `accent` is UI color — text on the dark page and a button fill under dark
+  // text — so lift it to WCAG AA contrast; `tone` keeps the photo's real hue
+  // and depth for the background gradient.
+  return { dominant, complements, accent: legible(accent), tone: accent };
+}
+
+const BG = [8, 8, 11];
+function luminance([r, g, b]) {
+  const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+  return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+}
+/** Lighten (same hue) until ≥4.6:1 against the page background. */
+export function legible(hex) {
+  const bgL = luminance(BG);
+  let [h, s, l] = rgbToHsl(hexToRgb(hex));
+  let rgb = hexToRgb(hex);
+  while ((luminance(rgb) + 0.05) / (bgL + 0.05) < 4.6 && l < 0.97) {
+    l = Math.min(0.97, l + 0.02);
+    rgb = hslToRgb(h, s, l);
+  }
+  return rgbToHex(rgb);
 }
 
 function hueDist(a, b) {
@@ -105,5 +125,5 @@ function hueDist(a, b) {
 function fallback(n) {
   const base = ["#3bbfae", "#a23b27", "#489f27", "#8f7465", "#1b1814", "#e0c341"];
   const dominant = base.slice(0, n);
-  return { dominant, complements: dominant.map(complement), accent: dominant[0] };
+  return { dominant, complements: dominant.map(complement), accent: legible(dominant[0]), tone: dominant[0] };
 }

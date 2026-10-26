@@ -356,7 +356,7 @@ figcaption { padding: .5rem .15rem .2rem; display: flex; flex-wrap: wrap; align-
 .photo-page .stage img { width: 100%; height: auto; border-radius: 4px; box-shadow: 0 40px 100px -40px #000; }
 .photo-page .meta { max-width: var(--maxw); margin: 1.2rem auto; padding: 0 clamp(1rem,4vw,2rem); }
 .photo-page .meta .exif-strip { font-size: 1rem; }
-.photo-page .backlink { color: var(--muted); }
+.photo-page .backlink { color: var(--muted); display: inline-block; padding: .3rem 0; } /* ≥24px tap target */
 .photo-page .pager { max-width: var(--maxw); margin: 2rem auto; padding: 0 clamp(1rem,4vw,2rem); display: flex; justify-content: space-between; font-size: .8rem; }
 
 @media (prefers-reduced-motion: reduce) {
