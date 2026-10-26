@@ -27,10 +27,16 @@ function int(v) {
   const n = num(Array.isArray(v) ? v[0] : v);
   return n == null ? null : Math.round(n);
 }
+// EXIF times are zoneless wall-clock. exifr revives them in the BUILD
+// machine's zone, so re-read the wall clock and pin it to UTC: every build
+// (local or Render, whatever TZ) yields the same ISO, ids and displayed times.
+// Format these with { timeZone: "UTC" } to show the camera's wall clock.
 function toISO(v) {
   if (!v) return null;
   const d = v instanceof Date ? v : new Date(v);
-  return isNaN(d) ? null : d.toISOString();
+  if (isNaN(d)) return null;
+  return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(),
+    d.getHours(), d.getMinutes(), d.getSeconds())).toISOString();
 }
 
 /**

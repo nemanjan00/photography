@@ -67,9 +67,6 @@ alt: Pulling back: red flare smoke through the trees and the whole chaos of Ćac
 ## DSC_5371
 alt: Celebrating people in focus across the street, the lit National Assembly melting into bokeh behind them
 
-## DSC_5411
-alt: A Serbian celebration the traditional way: cars crawling through Belgrade, people hanging out of windows and sunroofs
-
 ## DSC_5450
 alt: A young man holds up the Serbian flag as a huge, happy crowd gathers in front of the National Assembly
 
@@ -81,6 +78,9 @@ alt: Heading home with a souvenir: a man carries a Ćacilend chair on his should
 
 ## DSC_5487
 alt: The city stopped: a man sits on a Ćacilend chair on the tram tracks, raising three fingers, a halted tram behind him
+
+## DSC_5411
+alt: A Serbian celebration the traditional way: cars crawling through Belgrade, people hanging out of windows and sunroofs
 
 ## DSC_5498
 alt: My friend, out in the streets with me on election night — I was best man at his wedding
@@ -97,11 +97,11 @@ alt: Celebrating in the street, the Temple of Saint Sava (Hram Svetog Save) risi
 ## DSC_5597
 alt: Celebrating at Slavija — where the last protest before the election was held, and where they used the LRAD sound cannon on us
 
-## DSC_5601
-alt: People celebrating on top of a kiosk, above the crowd
-
 ## DSC_5609
 alt: Slavija under a Ferrari flag — the symbol of Serbian resistance ever since a 1990s protester with no Serbian flag raised one instead, and it stuck
+
+## DSC_5601
+alt: People celebrating on top of a kiosk, above the crowd
 
 ## DSC_5629
 alt: Pyrotechnics: fireworks and flare smoke erupting over the silhouetted crowd

@@ -120,7 +120,7 @@ async function processPhoto(file, ctx) {
   await derive(file, path.join(imgDir, `${id}-full.jpg`), { width: dim.width, format: "jpeg", quality: 88, saturate: B.saturate, srcW: dim.width, fullChroma: B.fullChroma });
 
   const d = exif.display || {};
-  const when = new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  const when = new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
   const alt = ctx.perPhotoAlt[stem] ||
     [ctx.title, ctx.location, when].filter(Boolean).join(" — ") ||
     [d.body, d.lens, d.strip].filter(Boolean).join(" · ");
@@ -183,7 +183,12 @@ async function loadStory(dir) {
 
   const fallbackDate = `${year}-${month}-15T12:00:00.000Z`;
   const photos = await mapLimit(files, cpuCount, (f) => processPhoto(f, { perPhoto: story.perPhoto, perPhotoAlt: story.perPhotoAlt, title: meta.title || slug, location: meta.location || "", fallbackDate }));
-  photos.sort((a, b) => new Date(a.date) - new Date(b.date)); // chronological within a trip
+  // chronological within a trip — unless story.md says otherwise: the order of
+  // its `## <stem>` sections IS the story order (move a section to move the
+  // photo); photos without a section follow, by time
+  photos.sort((a, b) => new Date(a.date) - new Date(b.date));
+  const rank = (p) => { const i = story.order.indexOf(p.stem); return i < 0 ? Infinity : i; };
+  photos.sort((a, b) => rank(a) - rank(b));
 
   const metaDate = meta.date ? new Date(meta.date) : null;
   const date = (metaDate && !isNaN(metaDate) ? metaDate.toISOString() : null) || photos[0]?.date || fallbackDate;
