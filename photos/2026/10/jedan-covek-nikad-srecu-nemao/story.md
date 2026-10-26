@@ -32,17 +32,23 @@ Serbia?
 
 Five minutes later, Vučić went on TV and admitted defeat.
 
-## DSC_5277
-alt: A smiling man walking his small white dog under amber streetlights on election night — people dropped whatever they were doing and went out to celebrate
-
 First, shock. Then a happiness I can't describe — free, at last, of the evil
 done to all Serbian people, and to my family. Then relief, after such a long
 fight and an especially hard week. I'm not ashamed to say I cried. Tears of joy.
 
-I set off for the Assembly and nothing could stop me. Nobody cared about red
-lights, nobody cared where we were going — people dropped whatever they were
-doing, dog leash still in hand, and went where they felt they should. We had
-won. I wanted to hug the whole world.
+## DSC_5266
+alt: People streaming toward the National Assembly between cars stopped on Bulevar kralja Aleksandra near Vukov spomenik, the boulevard turned into a parking lot on election night
+
+Then I set off for the Assembly, and nothing could stop me. People were coming
+from all sides, gathering at Vukov spomenik; Bulevar kralja Aleksandra turned
+into a parking lot. Nobody cared about red lights, nobody looked at the traffic
+— everyone just went where they felt they should.
+
+## DSC_5277
+alt: A smiling man walking his small white dog under amber streetlights on election night — people dropped whatever they were doing and went out to celebrate
+
+People dropped whatever they were doing, dog leash still in hand. We had won.
+I wanted to hug the whole world.
 
 ## DSC_5320
 alt: Crowd stepping over the torn-down fences of Ćacilend, the SNS camp outside the National Assembly, celebrating its end
