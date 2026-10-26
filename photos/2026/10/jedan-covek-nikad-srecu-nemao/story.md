@@ -25,6 +25,21 @@ End of lies. End of blackmail. End of shame. End of fear.
 ## DSC_5320
 alt: Crowd stepping over the torn-down fences of Ćacilend, the SNS camp outside the National Assembly, celebrating its end
 
+When Vučić conceded, I was in shock at first. Then came an immense happiness —
+finally freed of the evil that was done to all Serbian people, and to my
+family. Then relief that it was over, after such a long fight and an especially
+intense week. I'm not ashamed to say I let a few tears out. Tears of joy.
+
+I set off for the National Assembly and nothing stopped me. Nobody cared about
+red lights, nobody cared where we were going — everyone just went where they
+felt they should. We had finally won. I wanted to hug the whole world; I felt
+all the power in it.
+
+And then the joy of reaching Ćacilend. I came expecting thousands of hooligans
+behind that fence — and the fence was gone. Happy people were walking out of
+there, smiling, holding white Ćacilend chairs over their heads like they had
+won the world.
+
 ## DSC_5324
 alt: A young man holds up a white chair from the wrecked Ćacilend camp like a trophy, happy people all around him
 
