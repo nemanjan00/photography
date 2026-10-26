@@ -40,11 +40,16 @@ const magickEngine = {
     return stdout;
   },
 
-  async derive(file, outPath, { width, format, quality, saturate = 100, srcW }) {
+  async derive(file, outPath, { width, format, quality, saturate = 100, srcW, fullChroma }) {
     if (srcW && width > srcW) return null;
     await fs.mkdir(path.dirname(outPath), { recursive: true });
     const args = [file + "[0]", "-auto-orient", "-strip", "-resize", `${width}x`, "-filter", "Lanczos"];
     if (saturate !== 100) args.push("-modulate", `100,${saturate},100`);
+    if (fullChroma) {
+      if (format === "avif") args.push("-define", "heic:chroma=444");
+      else if (format === "webp") args.push("-define", "webp:use-sharp-yuv=true");
+      else if (format === "jpeg") args.push("-sampling-factor", "4:4:4");
+    }
     args.push("-quality", String(quality), `${format}:${outPath}`);
     await magick(args);
     const { stdout } = await magick([outPath, "-format", "%w %h %B", "info:"]);
@@ -95,7 +100,7 @@ async function sharpEngine() {
         .webp({ quality }).toBuffer();
     },
 
-    async derive(file, outPath, { width, format, quality, saturate = 100, srcW, effort }) {
+    async derive(file, outPath, { width, format, quality, saturate = 100, srcW, effort, fullChroma }) {
       if (srcW && width > srcW) return null;
       await fs.mkdir(path.dirname(outPath), { recursive: true });
       let pipe = sharp(file).rotate().resize({ width, withoutEnlargement: true });
@@ -103,6 +108,11 @@ async function sharpEngine() {
       const opts = { quality };
       if (effort != null && (format === "avif" || format === "webp")) opts.effort = effort;
       if (format === "jpeg") opts.mozjpeg = true;
+      if (fullChroma) {
+        if (format === "avif") opts.chromaSubsampling = "4:4:4";
+        else if (format === "webp") opts.smartSubsample = true;
+        else if (format === "jpeg") opts.chromaSubsampling = "4:4:4";
+      }
       const info = await pipe.toFormat(format === "jpeg" ? "jpeg" : format, opts).toFile(outPath);
       return { width: info.width, height: info.height, bytes: info.size, format, path: outPath };
     },

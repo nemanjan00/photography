@@ -107,14 +107,14 @@ async function processPhoto(file, ctx) {
   for (const w of widths) {
     const wantAvif = w <= B.avifMaxWidth;
     const [avif, webp] = await Promise.all([
-      wantAvif ? derive(file, path.join(imgDir, `${id}-${w}.avif`), { width: w, format: "avif", quality: B.quality.avif, effort: B.effort.avif, saturate: B.saturate, srcW: dim.width }) : null,
-      derive(file, path.join(imgDir, `${id}-${w}.webp`), { width: w, format: "webp", quality: B.quality.webp, effort: B.effort.webp, saturate: B.saturate, srcW: dim.width }),
+      wantAvif ? derive(file, path.join(imgDir, `${id}-${w}.avif`), { width: w, format: "avif", quality: B.quality.avif, effort: B.effort.avif, saturate: B.saturate, srcW: dim.width, fullChroma: B.fullChroma }) : null,
+      derive(file, path.join(imgDir, `${id}-${w}.webp`), { width: w, format: "webp", quality: B.quality.webp, effort: B.effort.webp, saturate: B.saturate, srcW: dim.width, fullChroma: B.fullChroma }),
     ]);
     if (webp) sizes.push({ w, h: webp.height, webp: `/img/${id}-${w}.webp`, ...(avif ? { avif: `/img/${id}-${w}.avif` } : {}) });
   }
   const fbW = widths.reduce((a, w) => (Math.abs(w - 1200) < Math.abs(a - 1200) ? w : a), widths[0]);
-  await derive(file, path.join(imgDir, `${id}-${fbW}.jpg`), { width: fbW, format: "jpeg", quality: B.quality.jpeg, saturate: B.saturate, srcW: dim.width });
-  await derive(file, path.join(imgDir, `${id}-full.jpg`), { width: dim.width, format: "jpeg", quality: 88, saturate: B.saturate, srcW: dim.width });
+  await derive(file, path.join(imgDir, `${id}-${fbW}.jpg`), { width: fbW, format: "jpeg", quality: B.quality.jpeg, saturate: B.saturate, srcW: dim.width, fullChroma: B.fullChroma });
+  await derive(file, path.join(imgDir, `${id}-full.jpg`), { width: dim.width, format: "jpeg", quality: 88, saturate: B.saturate, srcW: dim.width, fullChroma: B.fullChroma });
 
   const d = exif.display || {};
   const alt = [d.body, d.lens, d.strip].filter(Boolean).join(" · ") ||
@@ -153,13 +153,13 @@ async function processVideo(id) {
   const sizes = [];
   for (const w of widths) {
     const [avif, webp] = await Promise.all([
-      w <= B.avifMaxWidth ? derive(tmp, path.join(imgDir, `vid-${id}-${w}.avif`), { width: w, format: "avif", quality: B.quality.avif, effort: B.effort.avif, srcW: dim.width }) : null,
-      derive(tmp, path.join(imgDir, `vid-${id}-${w}.webp`), { width: w, format: "webp", quality: B.quality.webp, effort: B.effort.webp, srcW: dim.width }),
+      w <= B.avifMaxWidth ? derive(tmp, path.join(imgDir, `vid-${id}-${w}.avif`), { width: w, format: "avif", quality: B.quality.avif, effort: B.effort.avif, srcW: dim.width, fullChroma: B.fullChroma }) : null,
+      derive(tmp, path.join(imgDir, `vid-${id}-${w}.webp`), { width: w, format: "webp", quality: B.quality.webp, effort: B.effort.webp, srcW: dim.width, fullChroma: B.fullChroma }),
     ]);
     if (webp) sizes.push({ w, h: webp.height, webp: `/img/vid-${id}-${w}.webp`, ...(avif ? { avif: `/img/vid-${id}-${w}.avif` } : {}) });
   }
   const fbW = widths.reduce((a, w) => (Math.abs(w - 800) < Math.abs(a - 800) ? w : a), widths[0]);
-  await derive(tmp, path.join(imgDir, `vid-${id}-${fbW}.jpg`), { width: fbW, format: "jpeg", quality: B.quality.jpeg, srcW: dim.width });
+  await derive(tmp, path.join(imgDir, `vid-${id}-${fbW}.jpg`), { width: fbW, format: "jpeg", quality: B.quality.jpeg, srcW: dim.width, fullChroma: B.fullChroma });
   await fs.rm(tmp, { force: true });
   return { id: `yt-${id}`, ytId: id, palette, lqip, sizes, fallback: `/img/vid-${id}-${fbW}.jpg`, width: dim.width, height: dim.height, isVideo: true };
 }

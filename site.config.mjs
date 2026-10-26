@@ -33,7 +33,7 @@ export default {
     // Responsive widths, in CSS px. Each is capped to the master's real
     // width — the pipeline NEVER upscales, so nothing looks soft.
     // Small ones keep phones on a tiny-data diet; big ones make 4K sing.
-    widths: [480, 900, 1400, 2000, 2800],
+    widths: [480, 900, 1400, 2000, 2800, 3840],
 
     // AVIF compresses best (great for mobile LCP) but is SLOW to encode, so we
     // only emit it up to this width; WebP covers every size (fast) and desktop/
@@ -41,7 +41,12 @@ export default {
     // `effort` 0–9: lower = much faster encode, marginally larger files.
     avifMaxWidth: 1400,
     effort: { avif: 3, webp: 4 },
-    quality: { avif: 46, webp: 74, jpeg: 82 },
+    // Night/low-light frames (smoke, flares, deep shadows) band and smear at
+    // low settings, so these lean high.
+    quality: { avif: 58, webp: 84, jpeg: 88 },
+    // Full-resolution chroma (4:4:4 AVIF, sharp-YUV WebP, no JPEG subsampling):
+    // keeps saturated reds/blues (flares, neon, sirens) crisp instead of smeared.
+    fullChroma: true,
 
     // The 6×2-ish inline blur placeholder — a few dozen bytes, base64'd
     // straight into the HTML so it paints on the first byte.
