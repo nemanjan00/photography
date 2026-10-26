@@ -8,7 +8,7 @@ description: Belgrade, 25 October 2026 — record turnout, a Student List majori
 
 Almost two years after the Novi Sad station canopy collapsed and killed sixteen
 people, the students who took to the streets over it won at the ballot box:
-the highest turnout since 1992, a projected majority for the Student List, and
+the highest turnout since 1992, an outright majority for the Student List, and
 Aleksandar Vučić conceding before the night was out.
 
 End of lies. End of blackmail. End of shame. End of fear.
@@ -16,7 +16,7 @@ End of lies. End of blackmail. End of shame. End of fear.
 
 <!-- more -->
 
-Since 2012, SNS was Serbia's return to the '90s — the people who led us into
+Since 2012, SNS had been Serbia's return to the '90s — the people who led us into
 war, stained our history and killed our neighbours, back in a new, almost as
 evil form. Rule of crime, rule of money, rule of the cheap; rule of people who
 never learned to be ashamed.
@@ -58,7 +58,7 @@ gone. People were walking out of Ćacilend smiling, holding its white chairs
 over their heads like they had won the world.
 
 ## DSC_5324
-alt: A young man holds up a white chair from the wrecked Ćacilend camp like a trophy, happy people all around him
+alt: A young man holds up a white chair from the wrecked Ćacilend camp like a trophy, cheering people all around him
 
 Every chair a trophy.
 
