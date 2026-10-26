@@ -290,8 +290,11 @@ figcaption { padding: .5rem .15rem .2rem; display: flex; flex-wrap: wrap; align-
 .lb-glow { position: fixed; inset: 0; z-index: -1; opacity: .4; filter: blur(60px);
   background: radial-gradient(50% 50% at 30% 30%, var(--accent), transparent 70%),
              radial-gradient(50% 50% at 75% 80%, var(--comp), transparent 72%); }
-.lb-stage { min-height: 0; display: grid; place-items: center; }
-.lb-stage img { max-width: 100%; max-height: 100%; width: auto; height: auto; border-radius: 4px; box-shadow: 0 30px 80px -30px #000; }
+.lb-stage { position: relative; min-height: 0; }
+/* the <picture> is pinned to the stage box, so the img's max-height:100% has a
+   definite height to resolve against — the whole frame fits, never cropped */
+.lb-stage picture { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.lb-stage img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: 4px; box-shadow: 0 30px 80px -30px #000; }
 .lb-meta { padding-top: 1rem; display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; align-items: baseline; }
 .lb-meta .exif-strip { font-size: .9rem; }
 .lb-close { position: absolute; top: 1rem; right: 1.2rem; font-size: 1.4rem; color: var(--muted); background: none; border: 0; cursor: pointer; font-family: var(--mono); }

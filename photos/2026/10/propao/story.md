@@ -1,5 +1,5 @@
 ---
-title: Propao
+title: Jedan čovek nikad sreću nemao
 ---
 
 **Belgrade**, the night of 25 October 2026 — the night SNS fell.
